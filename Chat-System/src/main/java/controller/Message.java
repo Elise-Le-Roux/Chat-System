@@ -8,7 +8,7 @@ public class Message implements Serializable{
 	String to;
 	String content;
 	Date time;
-	public static enum typeMessage {TCP, CONNECTED, DISCONNECTED, USERNAMECHANGED};
+	public static enum typeMessage {TCP, GET_CONNECTED_USER, CONNECTED, DISCONNECTED, USERNAMECHANGED};
 	typeMessage type;
 
 	public Message(String from, String to, String content, Date time, typeMessage type) {

@@ -15,13 +15,12 @@ public class UdpTest {
 		
 		// Test envoi message broadcast connected/deconnected
 		UDPSocket UserA = new UDPSocket(5000); // User A
-		UDPSocket UserB = new UDPSocket(6000); // User B
 		
-		UserA.send_connected(6000, "User A");
 		Thread.sleep(1000);
-		System.out.println("ConnectedUsers = " + ConnectedUsers.getConnectedUsers());
+		
+		UserA.get_connected_users("User A");
 		Thread.sleep(1000);
-		UserA.send_disconnected(6000, "User A");
+		//UserA.send_disconnected(5000, "User A");
 		Thread.sleep(1000);
 		System.out.println("ConnectedUsers = " + ConnectedUsers.getConnectedUsers());
 		
