@@ -12,11 +12,14 @@ public class ConnectedUsers {
 	
 	public static void removeUser(String pseudo) {
 		for (User u : ConnectedUsers) {
-			if (pseudo == u.getPseudo()) {
+			if (u.getPseudo().equals(pseudo)) {
 				ConnectedUsers.remove(u);
 			}
 		}
 	}
 	
+	public static ArrayList<User> getConnectedUsers() {
+		return ConnectedUsers;
+	}
 	
 }

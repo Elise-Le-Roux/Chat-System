@@ -13,8 +13,9 @@ import controller.Message.typeMessage;
 public class UDPSocket extends Thread{
 	
 	DatagramSocket dgramSocket; 
-	byte[] buffer = new byte[256]; // buffer for incoming data
-	DatagramPacket inPacket = new DatagramPacket(buffer, buffer.length); // DatagramPacket object for the incoming datagram
+	byte[] bufferIN = new byte[1000]; // buffer for incoming data
+	byte[] bufferOUT = new byte[1000]; // buffer for outcoming data
+	DatagramPacket inPacket = new DatagramPacket(bufferIN, bufferIN.length); // DatagramPacket object for the incoming datagram
 	
 	public UDPSocket (int port) {
 		try {
@@ -31,16 +32,20 @@ public class UDPSocket extends Thread{
 				dgramSocket.receive(inPacket);
 				String hostname = inPacket.getAddress().getHostName();
 				
-				ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+				ByteArrayInputStream bais = new ByteArrayInputStream(bufferIN);
 			    ObjectInputStream ois = new ObjectInputStream(bais);
+			    
 			    Message msg = (Message)ois.readObject();
-				
+			    
 				String pseudo = msg.getSender();
+				
 				if (msg.getType() == typeMessage.CONNECTED) {
 					ConnectedUsers.addUser(pseudo,hostname);
+					System.out.println("CONNECTED");
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
 					ConnectedUsers.removeUser(pseudo);
+					System.out.println("DISCONNECTED");
 				}
 				else {
 					System.out.println("Message not recognized");
@@ -57,14 +62,15 @@ public class UDPSocket extends Thread{
 	// send broadcast msg to retrieve the list of connected users and notify users that we are now connected
 	public void send_broadcast(int port, Message message) {
 		try {
-			dgramSocket.setBroadcast(true);
-
+			//dgramSocket.setBroadcast(true);
+			
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(message);
 			oos.flush();
-
-			// get the byte array of the object
+			
+			//get the byte array of the object
 			byte[] buf = baos.toByteArray();
 
 			DatagramPacket outPacket = new DatagramPacket(buf, buf.length, UDPSocket.getBroadcastAddress(), port);
