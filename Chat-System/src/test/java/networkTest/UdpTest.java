@@ -14,14 +14,14 @@ public class UdpTest {
 		System.out.println("Broadcast address = " + addr.toString());
 		
 		// Test envoi message broadcast connected/deconnected
-		UDPSocket UserA = new UDPSocket(5000); // User A
+		UDPSocket UserA = new UDPSocket(); // User A
 		
 		Thread.sleep(1000);
 		
 		UserA.get_connected_users("User A");
 		Thread.sleep(1000);
 		//UserA.send_disconnected(5000, "User A");
-		Thread.sleep(1000);
+		//Thread.sleep(1000);
 		System.out.println("ConnectedUsers = " + ConnectedUsers.getConnectedUsers());
 		
 	}

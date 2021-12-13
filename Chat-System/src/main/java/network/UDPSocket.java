@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.Enumeration;
 
 import controller.ConnectedUsers;
-import controller.Message;
-import controller.Message.typeMessage;
+import controller.UDPMessage;
+import controller.UDPMessage.typeMessage;
 
 public class UDPSocket extends Thread{
 	
@@ -36,7 +36,7 @@ public class UDPSocket extends Thread{
 				ByteArrayInputStream bais = new ByteArrayInputStream(bufferIN);
 			    ObjectInputStream ois = new ObjectInputStream(bais);
 			    
-			    Message msg = (Message)ois.readObject();
+			    UDPMessage msg = (UDPMessage)ois.readObject();
 			    
 				String pseudo = msg.getSender();
 				
@@ -48,7 +48,10 @@ public class UDPSocket extends Thread{
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
 					ConnectedUsers.addUser(pseudo,hostname);
-					send_connected("", pseudo, addr); // changer "" avec notre pseudo et le port
+					send_connected("", pseudo, addr); // changer "" avec notre pseudo
+				}
+				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
+					ConnectedUsers.changePseudo(pseudo, msg.getNewPseudo());
 				}
 				else {
 					System.out.println("Message not recognized");
@@ -63,7 +66,7 @@ public class UDPSocket extends Thread{
 	}
 
 	// send broadcast msg to retrieve the list of connected users and notify users that we are now connected
-	private void send_msg(Message message, InetAddress addr) {
+	private void send_msg(UDPMessage message, InetAddress addr) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			
@@ -83,36 +86,36 @@ public class UDPSocket extends Thread{
 		}
 	}
 	
-	private void send_broadcast(Message message) {
+	private void send_broadcast(UDPMessage message) {
 		send_msg(message, UDPSocket.getBroadcastAddress());
 	}
 	
-	private void send_unicast(Message message, InetAddress addr) {
+	private void send_unicast(UDPMessage message, InetAddress addr) {
 		send_msg(message, addr);
 	}
 
 	// Broadcast
 	public void get_connected_users(String pseudo) {
-		Date date = new Date(System.currentTimeMillis());
-		Message message = new Message(pseudo, "broadcast", "", date, typeMessage.GET_CONNECTED_USER); 
+		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.GET_CONNECTED_USER); 
 		send_broadcast(message);
 	}
 
 	// Unicast in response to broadcast get_connected_users
 	public void send_connected(String from, String to, InetAddress addr) { 
-		Date date = new Date(System.currentTimeMillis());
-		Message message = new Message(from, to, "", date, typeMessage.CONNECTED); 
+		UDPMessage message = new UDPMessage(from, to, "", typeMessage.CONNECTED); 
 		send_unicast(message, addr);
 	}
 
 	// Broadcast : Notify all users that we are disconnected
 	public void send_disconnected(int port, String pseudo) {
-		Date date = new Date(System.currentTimeMillis());
-		Message message = new Message(pseudo, "broadcast", "", date, typeMessage.DISCONNECTED); 
+		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.DISCONNECTED); 
 		send_broadcast(message);
 	}
 
-
+	public void send_username_changed(String old_pseudo, String new_pseudo) {
+		UDPMessage message = new UDPMessage(old_pseudo, "broadcast", new_pseudo, typeMessage.PSEUDOCHANGED); 
+		send_broadcast(message);
+	}
 
 
 	public static InetAddress getBroadcastAddress() { // exception a la place de retourner null !
