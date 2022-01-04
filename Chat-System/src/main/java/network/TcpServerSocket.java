@@ -7,7 +7,7 @@ import java.util.Hashtable;
 public class TcpServerSocket extends Thread{
 	
 	ServerSocket listener;
-	Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50);
+	Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // hostname <-> socket
 
 	public TcpServerSocket(int port) {
 		try {
