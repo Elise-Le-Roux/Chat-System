@@ -93,8 +93,11 @@ public class Window extends JPanel {
 		//Create and set up the window.
 		frame = new JFrame("ChatSystem");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 		
+		//Create the list
+		JPanel List = new ListConnectedUsers();
+		List.setOpaque(true); //content panes must be opaque
+		frame.add(List, BorderLayout.WEST);
 
 		//Create and set up the content pane.
 		/* JComponent newContentPane = new WelcomePanel();
@@ -114,11 +117,6 @@ public class Window extends JPanel {
 	public static void change_view() {
 		frame.remove(welcome);
 		
-		//Create the list
-				JPanel List = new ListConnectedUsers();
-				List.setOpaque(true); //content panes must be opaque
-				frame.add(List, BorderLayout.WEST);
-
 		messages = new MessagePanel();
 		JPanel chatBox = new ChatBoxPanel();
 

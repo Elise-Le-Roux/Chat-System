@@ -5,9 +5,9 @@ public class User {
 	String pseudo;
 	String hostAddress;
 	
-	public User (String pseudo, String hostname) {
+	public User (String pseudo, String address) {
 		this.pseudo = pseudo;
-		this.hostAddress = hostname;
+		this.hostAddress = address;
 	}
 	
 	public String getPseudo () {

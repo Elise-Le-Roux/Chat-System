@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import controller.ConnectedUsers;
 import controller.UDPMessage;
 import controller.UDPMessage.typeMessage;
+import controller.specificUser;
 
 public class UDPSocket extends Thread{
 	
@@ -31,7 +32,7 @@ public class UDPSocket extends Thread{
 		while (true) {
 			try {
 				dgramSocket.receive(inPacket);
-				String hostname = inPacket.getAddress().getHostName();
+				String hostAddress = inPacket.getAddress().getHostAddress();
 				InetAddress addr = inPacket.getAddress();
 				ByteArrayInputStream bais = new ByteArrayInputStream(bufferIN);
 			    ObjectInputStream ois = new ObjectInputStream(bais);
@@ -41,19 +42,19 @@ public class UDPSocket extends Thread{
 				String pseudo = msg.getSender();
 				
 				if (msg.getType() == typeMessage.CONNECTED) {
-					ConnectedUsers.addUser(pseudo,hostname);
+					ConnectedUsers.addUser(pseudo,hostAddress);
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
 					ConnectedUsers.removeUser(pseudo);
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					send_connected("", pseudo, addr); // changer "" avec notre pseudo
+					send_connected(specificUser.get_pseudo(), pseudo, addr);
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
 					ConnectedUsers.changePseudo(pseudo, msg.getNewPseudo());
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
-					ConnectedUsers.addUser(pseudo,hostname);
+					ConnectedUsers.addUser(pseudo,hostAddress);
 				}
 				else {
 					System.out.println("Message not recognized");

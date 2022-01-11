@@ -38,4 +38,8 @@ public class specificUser {
 		}
 		return result;
 	}
+	
+	static public String get_pseudo() {
+		return pseudo;
+	}
 }
