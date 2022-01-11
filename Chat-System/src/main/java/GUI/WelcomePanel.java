@@ -82,6 +82,7 @@ public class WelcomePanel extends JPanel {
 				}
 				else {
 					Window.change_view();
+					specificUser.set_connected(true);
 				}
 			}
 			

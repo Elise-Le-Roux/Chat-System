@@ -52,7 +52,7 @@ public class UDPSocket extends Thread{
 					Window.list.refresh();
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					if (!hostAddress.equals(specificUser.get_address())) {
+					if (!hostAddress.equals(specificUser.get_address()) && specificUser.get_connected()) {
 						send_connected(specificUser.get_pseudo(), pseudo, addr);
 					}
 				}

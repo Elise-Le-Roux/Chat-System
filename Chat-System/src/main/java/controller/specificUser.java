@@ -8,6 +8,7 @@ public class specificUser {
 	
 	static String pseudo;
 	static String address;
+	static boolean connected = false;
 
 	public specificUser(String addr) {
 		address = addr;
@@ -54,5 +55,13 @@ public class specificUser {
 	
 	static public void set_address(String addr) {
 		address = addr;
+	}
+	
+	static public boolean get_connected() {
+		return connected;
+	}
+	
+	static public void set_connected(boolean con) {
+		connected = con;
 	}
 }

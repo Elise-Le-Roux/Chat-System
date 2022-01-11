@@ -25,7 +25,7 @@ public class DBTest {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		Date date = new Date(System.currentTimeMillis());
+		/*Date date = new Date(System.currentTimeMillis());
 		DB.insert(hostname1,"192.168.10.1", "helloword", date);
 		Date date2 = new Date(System.currentTimeMillis());
 		DB2.insert("192.168.10.1",hostname1, "hello", date2);
@@ -37,7 +37,7 @@ public class DBTest {
 	      while (iter.hasNext()) {
 	    	  TCPMessage msg = (TCPMessage) iter.next();
 	    	  msg.afficherMsg();
-	      }
+	      } */
 		DB.afficher_BDD();
 	}
 	

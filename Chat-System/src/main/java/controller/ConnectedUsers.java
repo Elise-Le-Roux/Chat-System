@@ -10,6 +10,8 @@ public class ConnectedUsers {
 		boolean exists = false;
 		if (!ConnectedUsers.isEmpty()) {
 			for (User u : ConnectedUsers) {
+				System.out.println(u.getHostAddress());
+				System.out.println(u.getPseudo());
 				if (u.getPseudo().equals(pseudo)) {
 					exists = true;
 				}
