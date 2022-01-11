@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.Date;
 
 import controller.TCPMessage;
+import database.DBManager;
 
 public class TcpTest {
 
@@ -13,6 +14,10 @@ public class TcpTest {
 		TcpServerSocket UserB = new TcpServerSocket(6000); // User B
 		String hostnameAB;
 		try {
+			DBManager DB = new DBManager();
+			DB.connect();
+			DB.drop();
+			DB.init();
 			hostnameAB = InetAddress.getLocalHost().getHostName(); // Same hostname because we test on the same computer
 			InetAddress addressAB = InetAddress.getLocalHost();
 			UserA.connect(hostnameAB, 6000); // Demand of connection from User A to User B
@@ -25,6 +30,9 @@ public class TcpTest {
 			Date date = new Date(System.currentTimeMillis());
 			socketA.send_msg(new TCPMessage(addressAB,addressAB,"hello",date,true));
 			socketB.send_msg(new TCPMessage(addressAB,addressAB,"helloword",date,true));
+			System.out.println("\n");
+			DBManager.afficher_BDD();
+			
 		} catch (UnknownHostException e) {
 			System.out.println("Hostname exception: " + e.getMessage());
 		} 

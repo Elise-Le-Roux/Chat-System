@@ -7,7 +7,7 @@ import java.util.Hashtable;
 public class TcpServerSocket extends Thread{
 	
 	ServerSocket listener;
-	Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // hostname <-> socket
+	static Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // host address <-> socket
 
 	public TcpServerSocket(int port) {
 		try {
@@ -27,7 +27,7 @@ public class TcpServerSocket extends Thread{
 				socketOfServer = listener.accept();
 				System.out.println("Connected");
 				TcpSocket thread = new TcpSocket(socketOfServer);
-				connections.put(socketOfServer.getInetAddress().getHostName(), thread);
+				connections.put(socketOfServer.getInetAddress().getHostAddress(), thread);
 			} catch (IOException e) {
 				System.out.println("Server exception 2: " + e.getMessage());
 			}
@@ -35,20 +35,22 @@ public class TcpServerSocket extends Thread{
 	}
 	
 	// Demand of connection to a specific host (and on a specific port)
-	public void connect(String host, int port) {
+	static public TcpSocket connect(String hostAddress, int port) {
 		Socket clientSocket;
+		TcpSocket thread = null;
 		try {
-			clientSocket = new Socket(host, port);
-			TcpSocket thread = new TcpSocket(clientSocket);
-			connections.put(host, thread);
+			clientSocket = new Socket(hostAddress, port);
+			thread = new TcpSocket(clientSocket);
+			connections.put(hostAddress, thread);
 		} catch (UnknownHostException e) {
 			System.out.println("Server not found: " + e.getMessage());
 		} catch (IOException e) {
 			System.out.println("I/O error: " + e.getMessage());
 		}
+		return thread;
 	}
 	
-	public Hashtable<String, TcpSocket> getConnections() {
+	public static Hashtable<String, TcpSocket> getConnections() {
 		return connections;
 	}
 	

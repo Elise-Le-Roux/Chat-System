@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 
 import controller.TCPMessage;
+import database.DBManager;
 
 public class TcpSocket extends Thread {
 	
@@ -16,12 +17,14 @@ public class TcpSocket extends Thread {
 	
 	public void run() {
 		try {
+			  DBManager DB = new DBManager();
+			  DB.connect();
 			  ObjectInputStream is = new ObjectInputStream(socketOfServer.getInputStream());
 
 			  TCPMessage msg = (TCPMessage) is.readObject();
 		      
 			  while (msg.getConnected()){
-				  msg.afficherMsg();
+				  DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
 				  msg = (TCPMessage) is.readObject();
 			  }
 			  socketOfServer.close();
@@ -52,6 +55,9 @@ public class TcpSocket extends Thread {
 		try {
 			ObjectOutputStream os = new ObjectOutputStream(socketOfServer.getOutputStream());
 			os.writeObject(msg);
+			DBManager DB = new DBManager();
+			DB.connect();
+			DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
 		} catch (IOException e) {
 			System.out.println("Output exception: " + e.getMessage());
 		}

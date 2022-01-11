@@ -11,7 +11,7 @@ import controller.User;
 
 public class DBManager {
 	static String url = "jdbc:sqlite:test.db";
-	Connection conn = null;
+	static Connection conn = null;
 
 	public void connect() {
 		try {
@@ -64,7 +64,7 @@ public class DBManager {
 		}
 	}
 
-	public void afficher_BDD () {
+	static public void afficher_BDD () {
 		try {
 			String query = "SELECT * FROM historique";
 			Statement stmt;

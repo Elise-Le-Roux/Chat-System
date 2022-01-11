@@ -38,12 +38,12 @@ public class TCPMessage implements Serializable{
 	public void setConnected(boolean status) {
 		this.connected = status;
 	}
-	public void afficherMsg() {
+	public String afficherMsg() {
 		String from1 = this.getSender().getHostAddress();
 		String to1 = this.getReceiver().getHostAddress();
 		String content1 = this.getContent();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String time1 = formatter.format(this.getTime());
-		System.out.println("From : " + from1 + ", To : " + to1 + ", Content : " + content1 + ", Time : " + time1);
+		return ("From : " + from1 + ", To : " + to1 + ", Time : " + time1 + "\nContent : " + content1 + "\n\n");
 	}
 }

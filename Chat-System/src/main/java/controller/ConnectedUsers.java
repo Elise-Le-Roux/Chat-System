@@ -6,7 +6,7 @@ public class ConnectedUsers {
 	
 	static ArrayList<User> ConnectedUsers = new ArrayList<User>();
 	
-	public static void addUser(String pseudo, String hostname) {
+	public static void addUser(String pseudo, String hostAddress) {
 		boolean exists = false;
 		for (User u : ConnectedUsers) {
 			if (u.getPseudo().equals(pseudo)) {
@@ -14,7 +14,7 @@ public class ConnectedUsers {
 			}
 		}
 		if (!exists) {
-			ConnectedUsers.add(new User(pseudo,hostname));
+			ConnectedUsers.add(new User(pseudo,hostAddress));
 		}
 	}
 	
@@ -34,8 +34,22 @@ public class ConnectedUsers {
 		}
 	}
 	
+	
 	public static ArrayList<User> getConnectedUsers() {
 		return ConnectedUsers;
+	}
+	
+	public static String getHostAddress(String pseudo) throws Exception {
+		String result = "";
+		boolean exists = false;
+		for (User u : ConnectedUsers) {
+			if (u.getPseudo().equals(pseudo)) {
+				result = u.getHostAddress();
+				exists = true;
+			}
+		}
+		if(!exists) {throw new Exception("Utilisateur non présent dans la liste des utilisateurs connectés");}
+		return result;
 	}
 	
 }

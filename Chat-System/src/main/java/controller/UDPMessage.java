@@ -7,7 +7,7 @@ public class UDPMessage implements Serializable{
 	String from; 
 	String to;
 	String new_pseudo;
-	public static enum typeMessage {GET_CONNECTED_USER, CONNECTED, DISCONNECTED, PSEUDOCHANGED};
+	public static enum typeMessage {GET_CONNECTED_USER, CONNECTED, DISCONNECTED, PSEUDOCHANGED, PSEUDOCHOSEN};
 	typeMessage type;
 
 	public UDPMessage(String from, String to, String new_pseudo, typeMessage type) {
