@@ -45,7 +45,9 @@ public class ChatBoxPanel extends JPanel {
 
 		// Change Username button
 		JButton changeUsername = new JButton("Change username");
+		ChangeUsernameListener usernameListener = new ChangeUsernameListener(changeUsername);
 		changeUsername.setActionCommand("Change username");
+		changeUsername.addActionListener(usernameListener);
 		changeUsername.setMaximumSize(new Dimension(130,30));
 		changeUsername.setEnabled(true);
 
@@ -139,7 +141,7 @@ public class ChatBoxPanel extends JPanel {
 			enableButton();
 		}
 
-		//Required by DocumentListener.
+		//Required by DocumentListener.SendListener
 		public void removeUpdate(DocumentEvent e) {
 			handleEmptyTextField(e);
 		}
@@ -166,4 +168,63 @@ public class ChatBoxPanel extends JPanel {
 			return false;
 		}
 	}
+	
+	//This listener is shared by the text field and the enter button.
+		class ChangeUsernameListener implements ActionListener, DocumentListener {
+			private boolean alreadyEnabled = false;
+			private JButton changeUsernameButton;
+
+			public ChangeUsernameListener(JButton button) {
+				this.changeUsernameButton = button;
+			}
+
+			public void actionPerformed(ActionEvent e) {
+				ChangeUsername changed = new ChangeUsername("Enter your new pseudo please. ");
+				String new_pseudo = changed.get_new_username();
+				if(new_pseudo != null && !new_pseudo.equals("")) {
+					boolean pseudo_ok = Controller.change_username(new_pseudo);
+					System.out.println(new_pseudo);
+					while(!pseudo_ok) {
+						changed = new ChangeUsername("This pseudo already exists, please enter a new one.");
+						if(new_pseudo != null && !new_pseudo.equals("")) {
+							new_pseudo = changed.get_new_username();
+							System.out.println(new_pseudo);
+							pseudo_ok = Controller.change_username(new_pseudo);
+						}
+					}
+				}
+			}
+
+			//Required by DocumentListener.
+			public void insertUpdate(DocumentEvent e) {
+				enableButton();
+			}
+
+			//Required by DocumentListener.
+			public void removeUpdate(DocumentEvent e) {
+				handleEmptyTextField(e);
+			}
+
+			//Required by DocumentListener.
+			public void changedUpdate(DocumentEvent e) {
+				if (!handleEmptyTextField(e)) {
+					enableButton();
+				}
+			}
+
+			private void enableButton() {
+				if (!alreadyEnabled) {
+					changeUsernameButton.setEnabled(true);
+				}
+			}
+
+			private boolean handleEmptyTextField(DocumentEvent e) {
+				if (e.getDocument().getLength() <= 0) {
+					changeUsernameButton.setEnabled(false);
+					alreadyEnabled = false;
+					return true;
+				}
+				return false;
+			}
+		}
 }

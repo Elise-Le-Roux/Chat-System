@@ -53,8 +53,15 @@ public class Controller {
 	}
 	
 	static public boolean change_username(String username) {
-		return specUser.changeUsername(username);
+		String old_pseudo = specUser.get_pseudo();
+		boolean result = specUser.changeUsername(username);
+		if(result) {
+			change_pseudo_connected_user(old_pseudo ,username);
+		}
+		window.refresh_list();
+		return result;
 	}
+	
 	static public void send_username_changed(String username) {
 		udpSocket.send_username_changed(specUser.get_pseudo(), username);
 	}

@@ -23,11 +23,13 @@ public class ConnectedUsers {
 	}
 	
 	public void removeUser(String pseudo) {
+		User usr = null;
 		for (User u : ConnectedUsers) {
 			if (u.getPseudo().equals(pseudo)) {
-				ConnectedUsers.remove(u);
+				usr = u;
 			}
 		}
+		ConnectedUsers.remove(usr);
 	}
 	
 	public void changePseudo(String old_pseudo, String new_pseudo) {
