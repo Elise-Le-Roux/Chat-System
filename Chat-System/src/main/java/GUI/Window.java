@@ -137,13 +137,7 @@ public class Window extends JPanel {
 			public void run() {
 				UDPSocket UserA = new UDPSocket();
 				TcpServerSocket Socket = new TcpServerSocket(3000);
-				try {
-					System.out.println(InetAddress.getLocalHost().getHostAddress());
-					//ConnectedUsers.addUser("pseudo1", InetAddress.getLocalHost().getHostAddress());
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				
 				//ConnectedUsers.addUser("pseudo2", "192.168.10.1");
 				/*for (int i=0; i<100; i++) {
 					ConnectedUsers.addUser("pseudo" + i, "hostname" + i);

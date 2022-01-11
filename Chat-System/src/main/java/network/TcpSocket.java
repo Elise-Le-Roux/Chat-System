@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 
 import controller.TCPMessage;
+import controller.specificUser;
 import database.DBManager;
 
 public class TcpSocket extends Thread {

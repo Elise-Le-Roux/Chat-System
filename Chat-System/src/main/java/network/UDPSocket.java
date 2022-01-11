@@ -29,6 +29,7 @@ public class UDPSocket extends Thread{
 	}
 	
 	public void run() {
+		specificUser.set_address(UDPSocket.getLocalAddr().getHostAddress());
 		while (true) {
 			try {
 				dgramSocket.receive(inPacket);
@@ -48,7 +49,9 @@ public class UDPSocket extends Thread{
 					ConnectedUsers.removeUser(pseudo);
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					send_connected(specificUser.get_pseudo(), pseudo, addr);
+					if (!hostAddress.equals(specificUser.get_address())) {
+						send_connected(specificUser.get_pseudo(), pseudo, addr);
+					}
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
 					ConnectedUsers.changePseudo(pseudo, msg.getNewPseudo());
@@ -150,5 +153,34 @@ public class UDPSocket extends Thread{
 			System.out.println("getBroadcastAddress exception: " + e.getMessage());
 		}
 		return broadcastAddress;
+	}
+	
+	public static InetAddress getLocalAddr() { 
+		InetAddress localAddress = null;
+		try {
+			
+			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+			while(interfaces.hasMoreElements()) {
+				
+				NetworkInterface ni = interfaces.nextElement();
+                 
+                 Enumeration<InetAddress> a = ni.getInetAddresses();
+                 for (; a.hasMoreElements();)
+                 {
+                	 InetAddress ia= (InetAddress) a.nextElement();
+                     if (!ia.isLinkLocalAddress() 
+                      && !ia.isLoopbackAddress()
+                      && ia instanceof Inet4Address) {
+                         return ia;
+                     }
+                 }
+                
+			}
+
+		} catch (SocketException e) {
+			System.out.println("getLocalAddr exception: " + e.getMessage());
+		}
+		return localAddress;
 	}
 }

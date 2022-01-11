@@ -1,21 +1,29 @@
 package controller;
 
+import java.util.ArrayList;
+
 import network.UDPSocket;
 
 public class specificUser {
 	
 	static String pseudo;
-	static String hostname;
+	static String address;
 
-	public specificUser(String hostname) {
-		this.hostname = hostname;
+	public specificUser(String addr) {
+		address = addr;
 	}
 
 	static public boolean chooseUsername(String pseudo) {
 		boolean result = true;
-		for( User u : ConnectedUsers.getConnectedUsers()) {
-			if(u.getPseudo().equals(pseudo)) {
-				result = false;
+		System.out.println(pseudo);
+		ArrayList<User> listUsers = ConnectedUsers.getConnectedUsers();
+		if (!listUsers.isEmpty()) {
+			for( User u : listUsers) {
+				System.out.println(u.getHostAddress());
+				System.out.println(u.getPseudo());
+				if(u.getPseudo().equals(pseudo)) {
+					result = false;
+				}
 			}
 		}
 		if (result) {
@@ -24,7 +32,7 @@ public class specificUser {
 		}
 		return result;
 	}
-	
+
 	static public boolean changeUsername(String new_pseudo) {
 		boolean result = true;
 		for( User u : ConnectedUsers.getConnectedUsers()) {
@@ -41,5 +49,13 @@ public class specificUser {
 	
 	static public String get_pseudo() {
 		return pseudo;
+	}
+	
+	static public String get_address() {
+		return address;
+	}
+	
+	static public void set_address(String addr) {
+		address = addr;
 	}
 }

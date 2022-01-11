@@ -8,9 +8,11 @@ public class ConnectedUsers {
 	
 	public static void addUser(String pseudo, String hostAddress) {
 		boolean exists = false;
-		for (User u : ConnectedUsers) {
-			if (u.getPseudo().equals(pseudo)) {
-				exists = true;
+		if (!ConnectedUsers.isEmpty()) {
+			for (User u : ConnectedUsers) {
+				if (u.getPseudo().equals(pseudo)) {
+					exists = true;
+				}
 			}
 		}
 		if (!exists) {

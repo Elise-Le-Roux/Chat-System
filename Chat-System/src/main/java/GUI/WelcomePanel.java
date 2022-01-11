@@ -76,12 +76,6 @@ public class WelcomePanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				boolean pseudo_ok = specificUser.chooseUsername(pseudo.getText());
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
 				if(!pseudo_ok) {
 					 error.setVisible(true);
