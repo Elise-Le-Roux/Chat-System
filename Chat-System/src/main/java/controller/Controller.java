@@ -40,6 +40,7 @@ public class Controller {
 	}
 	
 	static public void change_pseudo_connected_user(String old_pseudo, String new_pseudo) {
+		System.out.println("old_pseudo: " + old_pseudo + " new_pseudo: " + new_pseudo);
 		connected_users.changePseudo(old_pseudo, new_pseudo);
 		window.refresh_list();
 	}
@@ -62,8 +63,8 @@ public class Controller {
 		return result;
 	}
 	
-	static public void send_username_changed(String username) {
-		udpSocket.send_username_changed(specUser.get_pseudo(), username);
+	static public void send_username_changed(String old_pseudo, String new_pseudo) {
+		udpSocket.send_username_changed(old_pseudo, new_pseudo);
 	}
 	
 	static public void send_disconnected() {

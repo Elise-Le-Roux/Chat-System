@@ -53,6 +53,7 @@ public class UDPSocket extends Thread{
 					Controller.send_connected(pseudo, hostAddress, addr);
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
+					System.out.println("old_pseudo: " + pseudo + " new_pseudo: " + msg.getNewPseudo());
 					Controller.change_pseudo_connected_user(pseudo, msg.getNewPseudo());
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){

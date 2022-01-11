@@ -33,6 +33,7 @@ public class specificUser {
 
 	public boolean changeUsername(String new_pseudo) {
 		boolean result = true;
+		String old_pseudo = this.pseudo;
 		for( User u : Controller.get_list_connected_users()) {
 			if(u.getPseudo().equals(new_pseudo)) {
 				result = false;
@@ -40,7 +41,7 @@ public class specificUser {
 		}
 		if (result) {
 			this.pseudo = new_pseudo;
-			Controller.send_username_changed(new_pseudo);
+			Controller.send_username_changed(old_pseudo, new_pseudo);
 		}
 		return result;
 	}
