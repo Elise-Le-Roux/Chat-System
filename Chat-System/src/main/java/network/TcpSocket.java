@@ -12,7 +12,7 @@ public class TcpSocket extends Thread {
 	
 	Socket socketOfServer;
 	
-	ObjectOutputStream os;
+	
 	
 	public TcpSocket(Socket socketOfServer) {
 		this.socketOfServer = socketOfServer;
@@ -23,17 +23,21 @@ public class TcpSocket extends Thread {
 		try {
 			  DBManager DB = new DBManager();
 			  DB.connect();
-			  ObjectInputStream is = new ObjectInputStream(socketOfServer.getInputStream());
-
-			  TCPMessage msg = (TCPMessage) is.readObject();
-		      
-			  while (msg.getConnected()){
+			  TCPMessage msg;
+			 
+		      do {
+		    	  ObjectInputStream is = new ObjectInputStream(socketOfServer.getInputStream());
+				  msg = (TCPMessage) is.readObject();
 				  DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
 				  Window.messages.setContent(Window.getAdressee());
-				  msg = (TCPMessage) is.readObject();
-			  }
+		      }
+			  while (msg.getConnected());
+				  
+				 
+				  //msg = (TCPMessage) is.readObject();
+			  
 			  socketOfServer.close();
-			  is.close();
+			  //is.close();
 			
 			/* TCPMessage msg;
 			BufferedReader in;
@@ -58,7 +62,7 @@ public class TcpSocket extends Thread {
 
 	public void send_msg(TCPMessage msg) {
 		try {
-			os = new ObjectOutputStream(socketOfServer.getOutputStream());
+			ObjectOutputStream os = new ObjectOutputStream(socketOfServer.getOutputStream());
 			os.writeObject(msg);
 			DBManager DB = new DBManager();
 			DB.connect();

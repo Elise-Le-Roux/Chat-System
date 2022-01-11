@@ -48,8 +48,10 @@ public class UDPSocket extends Thread{
 					Window.list.refresh();
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
-					ConnectedUsers.removeUser(pseudo);
-					Window.list.refresh();
+					if (!hostAddress.equals(specificUser.get_address())) {
+						ConnectedUsers.removeUser(pseudo);
+						Window.list.refresh();
+					}
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
 					if (!hostAddress.equals(specificUser.get_address()) && specificUser.get_connected()) {
@@ -118,7 +120,7 @@ public class UDPSocket extends Thread{
 	}
 
 	// Broadcast : Notify all users that we are disconnected
-	public static void send_disconnected(int port, String pseudo) {
+	public static void send_disconnected(String pseudo) {
 		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.DISCONNECTED); 
 		send_broadcast(message);
 	}
