@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import controller.ConnectedUsers;
+import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;
 import database.DBManager;
@@ -38,9 +39,7 @@ public class MessagePanel extends JPanel {
 		DB.connect();
 		ArrayList<TCPMessage> list_msg = null;
 		try {
-			list_msg = DB.select_conv(specificUser.get_address(),ConnectedUsers.getHostAddress(pseudo));
-		} catch (UnknownHostException e) {
-			System.out.println("Exception InetAddress.getLocalHost().getHostAddress() ");
+			list_msg = DB.select_conv(Controller.get_address(),Controller.get_host_address(pseudo)); 
 		} catch (Exception e) {
 			System.out.println("Exception ConnectedUsers.getHostname ");
 		}

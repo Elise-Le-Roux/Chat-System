@@ -21,7 +21,7 @@ public class UdpTest {
 		Thread.sleep(1000);
 		//UserA.send_disconnected(5000, "User A");
 		//Thread.sleep(1000);.
-		System.out.println("ConnectedUsers = " + ConnectedUsers.getConnectedUsers());
+		//System.out.println("ConnectedUsers = " + ConnectedUsers.getConnectedUsers());
 		
 	}
 }

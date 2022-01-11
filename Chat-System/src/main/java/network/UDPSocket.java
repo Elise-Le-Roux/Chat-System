@@ -8,6 +8,7 @@ import java.util.Enumeration;
 
 import GUI.Window;
 import controller.ConnectedUsers;
+import controller.Controller;
 import controller.UDPMessage;
 import controller.UDPMessage.typeMessage;
 import controller.specificUser;
@@ -30,7 +31,6 @@ public class UDPSocket extends Thread{
 	}
 	
 	public void run() {
-		specificUser.set_address(UDPSocket.getLocalAddr().getHostAddress());
 		while (true) {
 			try {
 				dgramSocket.receive(inPacket);
@@ -44,27 +44,19 @@ public class UDPSocket extends Thread{
 				String pseudo = msg.getSender();
 				
 				if (msg.getType() == typeMessage.CONNECTED) {
-					ConnectedUsers.addUser(pseudo,hostAddress);
-					Window.list.refresh();
+					Controller.add_connected_user(pseudo,hostAddress);
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
-					if (!hostAddress.equals(specificUser.get_address())) {
-						ConnectedUsers.removeUser(pseudo);
-						Window.list.refresh();
-					}
+					Controller.remove_connected_user(pseudo, hostAddress);
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					if (!hostAddress.equals(specificUser.get_address()) && specificUser.get_connected()) {
-						send_connected(specificUser.get_pseudo(), pseudo, addr);
-					}
+					Controller.send_connected(pseudo, hostAddress, addr);
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
-					ConnectedUsers.changePseudo(pseudo, msg.getNewPseudo());
-					Window.list.refresh();
+					Controller.change_pseudo_connected_user(pseudo, msg.getNewPseudo());
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
-					ConnectedUsers.addUser(pseudo,hostAddress);
-					Window.list.refresh();
+					Controller.add_connected_user(pseudo,hostAddress);
 				}
 				else {
 					System.out.println("Message not recognized");
@@ -99,38 +91,38 @@ public class UDPSocket extends Thread{
 		}
 	}
 	
-	private static void send_broadcast(UDPMessage message) {
+	private void send_broadcast(UDPMessage message) {
 		send_msg(message, UDPSocket.getBroadcastAddress());
 	}
 	
-	private static void send_unicast(UDPMessage message, InetAddress addr) {
+	private void send_unicast(UDPMessage message, InetAddress addr) {
 		send_msg(message, addr);
 	}
 
 	// Broadcast
-	public static void get_connected_users() {
+	public void get_connected_users() {
 		UDPMessage message = new UDPMessage("", "broadcast", "", typeMessage.GET_CONNECTED_USER); 
 		send_broadcast(message);
 	}
 
 	// Unicast in response to broadcast get_connected_users
-	public static void send_connected(String from, String to, InetAddress addr) { 
+	public void send_connected(String from, String to, InetAddress addr) { 
 		UDPMessage message = new UDPMessage(from, to, "", typeMessage.CONNECTED); 
 		send_unicast(message, addr);
 	}
 
 	// Broadcast : Notify all users that we are disconnected
-	public static void send_disconnected(String pseudo) {
+	public void send_disconnected(String pseudo) {
 		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.DISCONNECTED); 
 		send_broadcast(message);
 	}
 
-	public static void send_username_changed(String old_pseudo, String new_pseudo) {
+	public void send_username_changed(String old_pseudo, String new_pseudo) {
 		UDPMessage message = new UDPMessage(old_pseudo, "broadcast", new_pseudo, typeMessage.PSEUDOCHANGED); 
 		send_broadcast(message);
 	}
 	
-	public static void send_chosen_pseudo(String pseudo) {
+	public void send_chosen_pseudo(String pseudo) {
 		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.PSEUDOCHOSEN); 
 		send_broadcast(message);
 	}

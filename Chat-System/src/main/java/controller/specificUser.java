@@ -6,17 +6,17 @@ import network.UDPSocket;
 
 public class specificUser {
 	
-	static String pseudo;
-	static String address;
-	static boolean connected = false;
+	String pseudo;
+	String address;
+	boolean connected = false;
 
 	public specificUser(String addr) {
 		address = addr;
 	}
 
-	static public boolean chooseUsername(String username) {
+	 public boolean chooseUsername(String username) {
 		boolean result = true;
-		ArrayList<User> listUsers = ConnectedUsers.getConnectedUsers();
+		ArrayList<User> listUsers = Controller.get_list_connected_users();
 		if (!listUsers.isEmpty()) {
 			for( User u : listUsers) {
 				if(u.getPseudo().equals(username)) {
@@ -25,43 +25,43 @@ public class specificUser {
 			}
 		}
 		if (result) {
-			pseudo = username;
-			UDPSocket.send_chosen_pseudo(username);
+			this.pseudo = username;
+			Controller.send_username_chosen(username);
 		}
 		return result;
 	}
 
-	static public boolean changeUsername(String new_pseudo) {
+	public boolean changeUsername(String new_pseudo) {
 		boolean result = true;
-		for( User u : ConnectedUsers.getConnectedUsers()) {
+		for( User u : Controller.get_list_connected_users()) {
 			if(u.getPseudo().equals(new_pseudo)) {
 				result = false;
 			}
 		}
 		if (result) {
-			pseudo = new_pseudo;
-			UDPSocket.send_username_changed(pseudo, new_pseudo);
+			this.pseudo = new_pseudo;
+			Controller.send_username_changed(new_pseudo);
 		}
 		return result;
 	}
 	
-	static public String get_pseudo() {
-		return pseudo;
+	public String get_pseudo() {
+		return this.pseudo;
 	}
 	
-	static public String get_address() {
-		return address;
+	public String get_address() {
+		return this.address;
 	}
 	
-	static public void set_address(String addr) {
-		address = addr;
+	public void set_address(String addr) {
+		this.address = addr;
 	}
 	
-	static public boolean get_connected() {
-		return connected;
+    public boolean get_connected() {
+		return this.connected;
 	}
 	
-	static public void set_connected(boolean con) {
-		connected = con;
+	public void set_connected(boolean con) {
+		this.connected = con;
 	}
 }

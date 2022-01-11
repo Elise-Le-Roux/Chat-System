@@ -13,7 +13,6 @@ public class TcpSocket extends Thread {
 	Socket socketOfServer;
 	
 	
-	
 	public TcpSocket(Socket socketOfServer) {
 		this.socketOfServer = socketOfServer;
 		start();

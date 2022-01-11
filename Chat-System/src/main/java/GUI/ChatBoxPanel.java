@@ -25,6 +25,7 @@ import javax.swing.event.DocumentListener;
 
 import GUI.WelcomePanel.EnterListener;
 import controller.ConnectedUsers;
+import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;
 import network.TcpServerSocket;
@@ -119,12 +120,12 @@ public class ChatBoxPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				Date date = new Date(System.currentTimeMillis());
-				String to = ConnectedUsers.getHostAddress(Window.getAdressee());
+				String to = Controller.get_host_address(Window.getAdressee());
 				if (TcpServerSocket.getConnections().containsKey(to)) {
-					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(specificUser.get_address()), InetAddress.getByName(to), message.getText(), date, true));
+					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, true));
 				}
 				else {
-					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(specificUser.get_address()), InetAddress.getByName(to), message.getText(), date, true)); //Port
+					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, true)); //Port
 					
 				}
 				Window.messages.setContent(Window.getAdressee());

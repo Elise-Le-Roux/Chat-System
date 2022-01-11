@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class ConnectedUsers {
 	
-	static ArrayList<User> ConnectedUsers = new ArrayList<User>();
+	ArrayList<User> ConnectedUsers = new ArrayList<User>();
 	
-	public static void addUser(String pseudo, String hostAddress) {
+	public void addUser(String pseudo, String hostAddress) {
 		boolean exists = false;
 		if (!ConnectedUsers.isEmpty()) {
 			for (User u : ConnectedUsers) {
@@ -22,7 +22,7 @@ public class ConnectedUsers {
 		}
 	}
 	
-	public static void removeUser(String pseudo) {
+	public void removeUser(String pseudo) {
 		for (User u : ConnectedUsers) {
 			if (u.getPseudo().equals(pseudo)) {
 				ConnectedUsers.remove(u);
@@ -30,7 +30,7 @@ public class ConnectedUsers {
 		}
 	}
 	
-	public static void changePseudo(String old_pseudo, String new_pseudo) {
+	public void changePseudo(String old_pseudo, String new_pseudo) {
 		for (User u : ConnectedUsers) {
 			if (u.getPseudo().equals(old_pseudo)) {
 				u.setPseudo(new_pseudo);
@@ -39,11 +39,11 @@ public class ConnectedUsers {
 	}
 	
 	
-	public static ArrayList<User> getConnectedUsers() {
+	public ArrayList<User> getConnectedUsers() {
 		return ConnectedUsers;
 	}
 	
-	public static String getHostAddress(String pseudo) throws Exception {
+	public String getHostAddress(String pseudo) throws Exception {
 		String result = "";
 		boolean exists = false;
 		for (User u : ConnectedUsers) {

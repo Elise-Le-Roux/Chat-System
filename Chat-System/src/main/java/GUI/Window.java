@@ -13,6 +13,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import controller.ConnectedUsers;
+import controller.Controller;
 import controller.User;
 import controller.specificUser;
 import database.DBManager;
@@ -28,7 +29,7 @@ public class Window extends JPanel {
 	static JFrame frame;
 	static JPanel welcome;
 	static String adressee;
-	static public ListConnectedUsers list;
+	static ListConnectedUsers list;
 
 	private static void initLookAndFeel() {
 
@@ -86,7 +87,7 @@ public class Window extends JPanel {
 	 * this method should be invoked from the
 	 * event-dispatching thread.
 	 */
-	private static void createAndShowGUI() {
+	public static void createAndShowGUI() {
 		//Set the look and feel.
 		initLookAndFeel();
 
@@ -108,7 +109,7 @@ public class Window extends JPanel {
 		list.setOpaque(true); //content panes must be opaque
 		frame.add(list, BorderLayout.WEST);
 		
-		UDPSocket.get_connected_users();
+		Controller.get_connected_users();
 
 		//Create and set up the content pane.
 		/* JComponent newContentPane = new WelcomePanel();
@@ -125,7 +126,7 @@ public class Window extends JPanel {
 	}
 
 	static public void exitProcedure() {
-		UDPSocket.send_disconnected(specificUser.get_pseudo());
+		Controller.send_disconnected();
 	    frame.dispose();
 	    System.exit(0);
 	}
@@ -147,24 +148,18 @@ public class Window extends JPanel {
 		frame.validate();
 	}
 	
+	public void refresh_list() {
+		list.refresh();
+	}
 	
-	public static void main(String[] args) {
+	
+	/*public static void main(String[] args) {
 		//Schedule a job for the event-dispatching thread:
 		//creating and showing this application's GUI.
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				UDPSocket UserA = new UDPSocket();
-				TcpServerSocket Socket = new TcpServerSocket(3000);
-				
-				//ConnectedUsers.addUser("pseudo2", "192.168.10.1");
-				/*for (int i=0; i<100; i++) {
-					ConnectedUsers.addUser("pseudo" + i, "hostname" + i);
-				} */
-				DBManager DB = new DBManager();
-				DB.connect();
-				DB.afficher_BDD();
 				createAndShowGUI();
 			}
 		});
-	}
+	} */
 }

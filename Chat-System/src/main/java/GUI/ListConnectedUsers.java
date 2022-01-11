@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import controller.ConnectedUsers;
+import controller.Controller;
 import controller.User;
 import database.DBManager;
 import network.UDPSocket;
@@ -47,7 +48,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	
 	public void refresh() {
 		listModel = new DefaultListModel();
-		for( User u : ConnectedUsers.getConnectedUsers()) {
+		for( User u : Controller.get_list_connected_users()) {
 			listModel.addElement(u.getPseudo());
 		}
 		list.setModel(listModel);

@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import controller.Controller;
 import controller.specificUser;
 
 public class WelcomePanel extends JPanel {
@@ -75,14 +76,14 @@ public class WelcomePanel extends JPanel {
 	        
 			public void actionPerformed(ActionEvent e) {
 
-				boolean pseudo_ok = specificUser.chooseUsername(pseudo.getText());
+				boolean pseudo_ok = Controller.choose_username(pseudo.getText());
 				
 				if(!pseudo_ok) {
 					 error.setVisible(true);
 				}
 				else {
 					Window.change_view();
-					specificUser.set_connected(true);
+					Controller.set_connected(true);
 				}
 			}
 			
