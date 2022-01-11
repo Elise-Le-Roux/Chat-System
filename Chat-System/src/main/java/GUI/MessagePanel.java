@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import controller.ConnectedUsers;
 import controller.TCPMessage;
+import controller.specificUser;
 import database.DBManager;
 
 //Messagebox to display the history messages with current user 
@@ -37,7 +38,7 @@ public class MessagePanel extends JPanel {
 		DB.connect();
 		ArrayList<TCPMessage> list_msg = null;
 		try {
-			list_msg = DB.select_conv(InetAddress.getLocalHost().getHostAddress(),ConnectedUsers.getHostAddress(pseudo));
+			list_msg = DB.select_conv(specificUser.get_address(),ConnectedUsers.getHostAddress(pseudo));
 		} catch (UnknownHostException e) {
 			System.out.println("Exception InetAddress.getLocalHost().getHostAddress() ");
 		} catch (Exception e) {

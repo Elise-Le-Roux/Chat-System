@@ -13,22 +13,19 @@ public class specificUser {
 		address = addr;
 	}
 
-	static public boolean chooseUsername(String pseudo) {
+	static public boolean chooseUsername(String username) {
 		boolean result = true;
-		System.out.println(pseudo);
 		ArrayList<User> listUsers = ConnectedUsers.getConnectedUsers();
 		if (!listUsers.isEmpty()) {
 			for( User u : listUsers) {
-				System.out.println(u.getHostAddress());
-				System.out.println(u.getPseudo());
-				if(u.getPseudo().equals(pseudo)) {
+				if(u.getPseudo().equals(username)) {
 					result = false;
 				}
 			}
 		}
 		if (result) {
-			pseudo = pseudo;
-			UDPSocket.send_chosen_pseudo(pseudo);
+			pseudo = username;
+			UDPSocket.send_chosen_pseudo(username);
 		}
 		return result;
 	}

@@ -119,15 +119,15 @@ public class ChatBoxPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				Date date = new Date(System.currentTimeMillis());
-				System.out.println(Window.getAdressee());
 				String to = ConnectedUsers.getHostAddress(Window.getAdressee());
 				if (TcpServerSocket.getConnections().containsKey(to)) {
-					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getLocalHost(), InetAddress.getByName(to), message.getText(), date, true));
+					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(specificUser.get_address()), InetAddress.getByName(to), message.getText(), date, true));
 				}
 				else {
-					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getLocalHost(), InetAddress.getByName(to), message.getText(), date, true)); //Port
+					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(specificUser.get_address()), InetAddress.getByName(to), message.getText(), date, true)); //Port
 					
 				}
+				Window.messages.setContent(Window.getAdressee());
 			} catch (Exception e1) {
 				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
 			} 

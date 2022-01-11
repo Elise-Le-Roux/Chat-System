@@ -3,6 +3,7 @@ package network;
 import java.io.*;
 import java.net.*;
 
+import GUI.Window;
 import controller.TCPMessage;
 import controller.specificUser;
 import database.DBManager;
@@ -26,6 +27,7 @@ public class TcpSocket extends Thread {
 		      
 			  while (msg.getConnected()){
 				  DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
+				  Window.messages.setContent(Window.getAdressee());
 				  msg = (TCPMessage) is.readObject();
 			  }
 			  socketOfServer.close();

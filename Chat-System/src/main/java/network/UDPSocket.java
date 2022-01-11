@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.Enumeration;
 
+import GUI.Window;
 import controller.ConnectedUsers;
 import controller.UDPMessage;
 import controller.UDPMessage.typeMessage;
@@ -44,9 +45,11 @@ public class UDPSocket extends Thread{
 				
 				if (msg.getType() == typeMessage.CONNECTED) {
 					ConnectedUsers.addUser(pseudo,hostAddress);
+					Window.list.refresh();
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
 					ConnectedUsers.removeUser(pseudo);
+					Window.list.refresh();
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
 					if (!hostAddress.equals(specificUser.get_address())) {
@@ -55,9 +58,11 @@ public class UDPSocket extends Thread{
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
 					ConnectedUsers.changePseudo(pseudo, msg.getNewPseudo());
+					Window.list.refresh();
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
 					ConnectedUsers.addUser(pseudo,hostAddress);
+					Window.list.refresh();
 				}
 				else {
 					System.out.println("Message not recognized");

@@ -22,10 +22,11 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	public ListConnectedUsers(){
 		super(new BorderLayout());
 		listModel = new DefaultListModel();
-		UDPSocket.get_connected_users();
-		for( User u : ConnectedUsers.getConnectedUsers()) {
+		
+		
+		/*for( User u : ConnectedUsers.getConnectedUsers()) {
 			listModel.addElement(u.getPseudo());
-		}
+		} */
 		
 		//Create the list and put it in a scroll pane.
         list = new JList(listModel);
@@ -35,6 +36,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
         list.setVisibleRowCount(5);
         JScrollPane listScrollPane = new JScrollPane(list);
         add(listScrollPane);
+        
 	} 
 	
 	//For the chatPanel
@@ -42,4 +44,12 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 		Window.messages.setContent((String) list.getSelectedValue());
 		Window.setAdressee((String) list.getSelectedValue());
 	} 
+	
+	public void refresh() {
+		listModel = new DefaultListModel();
+		for( User u : ConnectedUsers.getConnectedUsers()) {
+			listModel.addElement(u.getPseudo());
+		}
+		list.setModel(listModel);
+	}
 }

@@ -22,10 +22,11 @@ public class Window extends JPanel {
 	//Specify the look and feel to use.  Valid values:
 	//null (use the default), "Metal", "System", "Motif", "GTK+"
 	final static String LOOKANDFEEL = "GTK+";
-	static MessagePanel messages;
+	public static MessagePanel messages;
 	static JFrame frame;
 	static JPanel welcome;
 	static String adressee;
+	static public ListConnectedUsers list;
 
 	private static void initLookAndFeel() {
 
@@ -95,9 +96,11 @@ public class Window extends JPanel {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Create the list
-		JPanel List = new ListConnectedUsers();
-		List.setOpaque(true); //content panes must be opaque
-		frame.add(List, BorderLayout.WEST);
+		list = new ListConnectedUsers();
+		list.setOpaque(true); //content panes must be opaque
+		frame.add(list, BorderLayout.WEST);
+		
+		UDPSocket.get_connected_users();
 
 		//Create and set up the content pane.
 		/* JComponent newContentPane = new WelcomePanel();
