@@ -12,6 +12,8 @@ public class TcpSocket extends Thread {
 	
 	Socket socketOfServer;
 	
+	ObjectOutputStream os;
+	
 	public TcpSocket(Socket socketOfServer) {
 		this.socketOfServer = socketOfServer;
 		start();
@@ -48,7 +50,7 @@ public class TcpSocket extends Thread {
 			in.close(); */
 
 		} catch (IOException e) {
-			System.out.println("Input exception: " + e.getMessage());
+			System.out.println("Input exception TcpSocket: " + e.getMessage());
 		} catch (ClassNotFoundException e) {
 			System.out.println("class TCPMessage not found " + e.getMessage());
 		}
@@ -56,7 +58,7 @@ public class TcpSocket extends Thread {
 
 	public void send_msg(TCPMessage msg) {
 		try {
-			ObjectOutputStream os = new ObjectOutputStream(socketOfServer.getOutputStream());
+			os = new ObjectOutputStream(socketOfServer.getOutputStream());
 			os.writeObject(msg);
 			DBManager DB = new DBManager();
 			DB.connect();
