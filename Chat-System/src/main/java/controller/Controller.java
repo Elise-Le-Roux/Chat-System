@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import GUI.Window;
 import network.TcpServerSocket;
+import network.TcpSocket;
 import network.UDPSocket;
 
 public class Controller {
@@ -31,10 +32,13 @@ public class Controller {
 			connected_users.removeUser(pseudo);
 			window.refresh_list();
 		}
+		TcpSocket sock = tcpSocket.getConnections().get(address);
+		tcpSocket.getConnections().remove(address);
+		sock.kill();
 	}
 
 	static public void send_connected(String pseudo, String address, InetAddress addr) {
-		if (!address.equals(specUser.get_address()) && specUser.get_connected()) {
+		if (!address.equals(specUser.get_address())) { // && specUser.get_connected()
 			udpSocket.send_connected(specUser.get_pseudo(), pseudo, addr);
 		}
 	}

@@ -12,11 +12,19 @@ public class TcpSocket extends Thread {
 	
 	Socket socketOfServer;
 	
-	
+	 // to stop the thread
+    private boolean exit;
+
 	public TcpSocket(Socket socketOfServer) {
 		this.socketOfServer = socketOfServer;
+		this.exit = false;
 		start();
 	}
+	
+	 // for stopping the thread
+    public void kill() {
+        exit = true;
+    }
 	
 	public void run() {
 		try {
@@ -30,7 +38,7 @@ public class TcpSocket extends Thread {
 				  DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
 				  Window.messages.setContent(Window.getAdressee());
 		      }
-			  while (msg.getConnected());
+			  while (!exit);
 				  
 				 
 				  //msg = (TCPMessage) is.readObject();

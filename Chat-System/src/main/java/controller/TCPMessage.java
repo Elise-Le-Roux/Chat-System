@@ -10,7 +10,7 @@ public class TCPMessage implements Serializable{
 	InetAddress to;
 	String content;
 	Date time;
-	boolean connected;
+	boolean connected; // a enlever
 	
 	public TCPMessage(InetAddress from, InetAddress to, String content, Date time, Boolean connected) {
 		this.from = from;

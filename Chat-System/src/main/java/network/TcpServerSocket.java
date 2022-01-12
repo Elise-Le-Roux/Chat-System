@@ -25,7 +25,6 @@ public class TcpServerSocket extends Thread{
 			Socket socketOfServer;
 			try {
 				socketOfServer = listener.accept();
-				System.out.println("Connected");
 				TcpSocket thread = new TcpSocket(socketOfServer);
 				connections.put(socketOfServer.getInetAddress().getHostAddress(), thread);
 			} catch (IOException e) {
