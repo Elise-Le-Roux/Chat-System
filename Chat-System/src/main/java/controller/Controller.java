@@ -33,12 +33,14 @@ public class Controller {
 			window.refresh_list();
 		}
 		TcpSocket sock = tcpSocket.getConnections().get(address);
-		tcpSocket.getConnections().remove(address);
-		sock.kill();
+		if(sock != null) {
+			tcpSocket.getConnections().remove(address);
+			sock.kill();
+		}
 	}
 
 	static public void send_connected(String pseudo, String address, InetAddress addr) {
-		if (!address.equals(specUser.get_address())) { // && specUser.get_connected()
+		if (!address.equals(specUser.get_address()) && specUser.get_connected()) { 
 			udpSocket.send_connected(specUser.get_pseudo(), pseudo, addr);
 		}
 	}
@@ -89,6 +91,15 @@ public class Controller {
 	
 	static public String get_address() {
 		return specUser.get_address();
+	}
+	
+	static public String get_pseudo() {
+		if(specUser != null) {
+			return specUser.get_pseudo();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	static public String get_host_address(String pseudo) {

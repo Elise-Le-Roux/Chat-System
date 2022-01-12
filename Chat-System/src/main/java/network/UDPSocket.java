@@ -50,7 +50,9 @@ public class UDPSocket extends Thread{
 					Controller.remove_connected_user(pseudo, hostAddress);
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					Controller.send_connected(pseudo, hostAddress, addr);
+					if(Controller.get_pseudo() != null) {
+						Controller.send_connected(pseudo, hostAddress, addr);
+					}
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
 					Controller.change_pseudo_connected_user(pseudo, msg.getNewPseudo());

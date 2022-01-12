@@ -8,10 +8,11 @@ public class specificUser {
 	
 	String pseudo;
 	String address;
-	boolean connected = false;
+	boolean connected;
 
 	public specificUser(String addr) {
-		address = addr;
+		this.address = addr;
+		this.connected = false;
 	}
 
 	 public boolean chooseUsername(String username) {

@@ -14,35 +14,45 @@ public class TcpSocket extends Thread {
 	
 	 // to stop the thread
     private boolean exit;
+    
+    ObjectInputStream is;
+    ObjectOutputStream os;
 
 	public TcpSocket(Socket socketOfServer) {
 		this.socketOfServer = socketOfServer;
 		this.exit = false;
+		try {
+			this.os = new ObjectOutputStream(socketOfServer.getOutputStream());
+			this.is = new ObjectInputStream(socketOfServer.getInputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		start();
 	}
-	
-	 // for stopping the thread
-    public void kill() {
-        exit = true;
-    }
-	
+
+	// for stopping the thread
+	public void kill() {
+		exit = true;
+	}
+
 	public void run() {
 		try {
-			  DBManager DB = new DBManager();
-			  DB.connect();
-			  TCPMessage msg;
-			 
-		      do {
-		    	  ObjectInputStream is = new ObjectInputStream(socketOfServer.getInputStream());
-				  msg = (TCPMessage) is.readObject();
-				  DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
-				  Window.messages.setContent(Window.getAdressee());
-		      }
-			  while (!exit);
-				  
-				 
+			DBManager DB = new DBManager();
+			DB.connect();
+			TCPMessage msg;
+			msg = (TCPMessage) is.readObject();
+
+			while (!exit & msg != null) {
+				System.out.println("TEST");
+				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
+				Window.messages.setContent(Window.getAdressee()); // a changer
+				msg = (TCPMessage) is.readObject();
+			}
+
+
 				  //msg = (TCPMessage) is.readObject();
-			  
+			  System.out.println("close " + socketOfServer.toString());
 			  socketOfServer.close();
 			  //is.close();
 			
@@ -69,7 +79,7 @@ public class TcpSocket extends Thread {
 
 	public void send_msg(TCPMessage msg) {
 		try {
-			ObjectOutputStream os = new ObjectOutputStream(socketOfServer.getOutputStream());
+			
 			os.writeObject(msg);
 			DBManager DB = new DBManager();
 			DB.connect();
