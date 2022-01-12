@@ -40,7 +40,6 @@ public class Controller {
 	}
 	
 	static public void change_pseudo_connected_user(String old_pseudo, String new_pseudo) {
-		System.out.println("old_pseudo: " + old_pseudo + " new_pseudo: " + new_pseudo);
 		connected_users.changePseudo(old_pseudo, new_pseudo);
 		window.refresh_list();
 	}

@@ -35,14 +35,11 @@ public class MessagePanel extends JPanel {
 	}
 	
 	public void setContent(String pseudo) {
+		System.out.println("Set content: " + pseudo);
 		DBManager DB = new DBManager();
 		DB.connect();
 		ArrayList<TCPMessage> list_msg = null;
-		try {
-			list_msg = DB.select_conv(Controller.get_address(),Controller.get_host_address(pseudo)); 
-		} catch (Exception e) {
-			System.out.println("Exception ConnectedUsers.getHostname ");
-		}
+		list_msg = DB.select_conv(Controller.get_address(),Controller.get_host_address(pseudo)); 
 		textArea.selectAll();
 		textArea.replaceSelection("");
 		for(TCPMessage msg : list_msg) {
