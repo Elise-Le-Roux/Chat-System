@@ -38,7 +38,9 @@ public class DBTest {
 	    	  TCPMessage msg = (TCPMessage) iter.next();
 	    	  msg.afficherMsg();
 	      } */
-		DB.afficher_BDD();
+		Date date3 = new Date(System.currentTimeMillis());
+		DB.insert(hostname1, hostname1, "TEST", date3, "TEXT");
+		DBManager.afficher_BDD();
 	}
 	
 

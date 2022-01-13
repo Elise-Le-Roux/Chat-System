@@ -29,21 +29,23 @@ public class MessagePanel extends JPanel {
     	textArea = new JTextArea(5, 20);
     	JScrollPane scrollPane = new JScrollPane(textArea); 
     	textArea.setEditable(false);
-    	
+
     	add(scrollPane);
 
 	}
-	
+
 	public void setContent(String pseudo) {
-		System.out.println("Set content: " + pseudo);
 		DBManager DB = new DBManager();
 		DB.connect();
 		ArrayList<TCPMessage> list_msg = null;
 		list_msg = DB.select_conv(Controller.get_address(),Controller.get_host_address(pseudo)); 
 		textArea.selectAll();
 		textArea.replaceSelection("");
+		System.out.println("*********************SET CONTENT*********************************");
 		for(TCPMessage msg : list_msg) {
+			System.out.println(msg.afficherMsg());
 			textArea.append(msg.afficherMsg());
 		}
+		System.out.println("******************************************************************");
 	}
 }

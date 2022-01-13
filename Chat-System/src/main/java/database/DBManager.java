@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import controller.TCPMessage;
 import controller.User;
+import controller.TCPMessage.TypeNextMessage;
 
 public class DBManager {
 	static String url = "jdbc:sqlite:test.db";
@@ -24,14 +25,15 @@ public class DBManager {
 		}
 	}
 
-	public void insert(String from, String to, String content, Date time ) {
+	public void insert(String from, String to, String content, Date time, String type) {
 		try {
-			String query = "INSERT INTO historique values (?,?,?,?)";
+			String query = "INSERT INTO historique values (?,?,?,?,?)";
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1,from);
 			pstmt.setString(2,to);
 			pstmt.setString(3,content);
 			pstmt.setDate(4,time);
+			pstmt.setString(5,type);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("SQL INSERT exception" + e.getMessage());
@@ -51,8 +53,14 @@ public class DBManager {
 				InetAddress addTo = InetAddress.getByName(rs.getString(2));
 				String content = rs.getString(3);
 				Date   time = rs.getDate(4);
-				
-				messages.add(new TCPMessage(addFrom, addTo, content, time, true));
+				TypeNextMessage type;
+				if (rs.getString(5).equals("TEXT")) {
+					type = TypeNextMessage.TEXT;
+				}
+				else {
+					type = TypeNextMessage.FILE;
+				}
+				messages.add(new TCPMessage(addFrom, addTo, content, time, type));
 			}
 			return messages;
 		} catch (SQLException e) {
@@ -76,7 +84,8 @@ public class DBManager {
 				System.out.print(", content = " + rs.getString(3));
 				System.out.print(", time = ");
 				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-				System.out.println(formatter.format(rs.getDate(4)));
+				System.out.print(formatter.format(rs.getDate(4)));
+				System.out.println(", type = " + rs.getString(5));
 			}
 		} catch (SQLException e) {
 			System.out.println("SQL exception select 2" + e.getMessage());
@@ -86,14 +95,16 @@ public class DBManager {
 
 	//initialization of the database 
 	public void init(){
-		String query = "CREATE TABLE historique ("
+		String query1 = "CREATE TABLE historique ("
 				+ "de VARCHAR(100), " // adresse ip
 				+ "a VARCHAR(100), " // adresse ip
 				+ "content TEXT, "
-				+ "time DATETIME )";
+				+ "time DATETIME, "
+				+ "type VARCHAR(10))";
+
 		try {
 			Statement stmt = conn.createStatement();
-			stmt.executeUpdate(query);
+			stmt.executeUpdate(query1);
 		} catch (SQLException e) {
 			// Do nothing if database already exists
 		}

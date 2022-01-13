@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.sql.Date;
@@ -18,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -28,12 +30,14 @@ import controller.ConnectedUsers;
 import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;
+import controller.TCPMessage.TypeNextMessage;
 import network.TcpServerSocket;
 
 //Chatbox at bottom to send message 
 public class ChatBoxPanel extends JPanel {
 
 	private JTextField message;
+	JFileChooser fc;
 
 	public ChatBoxPanel() {
 		super(new BorderLayout());
@@ -89,22 +93,38 @@ public class ChatBoxPanel extends JPanel {
 		send.setBorder(null);
 
 		//send.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		send.setEnabled(true);
 		// add(send, BorderLayout.SOUTH);
 
 		message.addActionListener(sendListener);
 
 
+		// send files button
+		//Create a file chooser
+		fc = new JFileChooser();
+
+		//Create the open button.  We use the image from the JLF
+		//Graphics Repository (but we extracted it from the jar).
+		JButton fileButton = new JButton("Send file");
+		FileListener fileListener = new FileListener(fileButton);
+		fileButton.setActionCommand("Send file");
+		fileButton.addActionListener(fileListener);
+		fileButton.setMaximumSize(new Dimension(130,30));
+		fileButton.setEnabled(true);
+
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
 				.addComponent(changeUsername)
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
 						.addComponent(message)
-						.addComponent(send)));
+						.addComponent(send)
+						.addComponent(fileButton)));
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
-				.addComponent(changeUsername)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(changeUsername)
+						.addComponent(fileButton))
 				.addComponent(message)
 				.addComponent(send));
 
@@ -124,13 +144,12 @@ public class ChatBoxPanel extends JPanel {
 				Date date = new Date(System.currentTimeMillis());
 				String to = Controller.get_host_address(Window.getAdressee());
 				if (TcpServerSocket.getConnections().containsKey(to)) {
-					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, true));
+					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT));
 				}
 				else {
-					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, true)); //Port
-					
+					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
+
 				}
-				Window.messages.setContent(Window.getAdressee());
 			} catch (Exception e1) {
 				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
 			} 
@@ -168,63 +187,131 @@ public class ChatBoxPanel extends JPanel {
 			return false;
 		}
 	}
-	
+
 	//This listener is shared by the text field and the enter button.
-		class ChangeUsernameListener implements ActionListener, DocumentListener {
-			private boolean alreadyEnabled = false;
-			private JButton changeUsernameButton;
+	class ChangeUsernameListener implements ActionListener, DocumentListener {
+		private boolean alreadyEnabled = false;
+		private JButton changeUsernameButton;
 
-			public ChangeUsernameListener(JButton button) {
-				this.changeUsernameButton = button;
-			}
+		public ChangeUsernameListener(JButton button) {
+			this.changeUsernameButton = button;
+		}
 
-			public void actionPerformed(ActionEvent e) {
-				ChangeUsername changed = new ChangeUsername("Enter your new pseudo please. ");
-				String new_pseudo = changed.get_new_username();
-				if(new_pseudo != null && !new_pseudo.equals("")) {
-					boolean pseudo_ok = Controller.change_username(new_pseudo);
-					System.out.println(new_pseudo);
-					while(!pseudo_ok) {
-						changed = new ChangeUsername("This pseudo already exists, please enter a new one.");
-						if(new_pseudo != null && !new_pseudo.equals("")) {
-							new_pseudo = changed.get_new_username();
-							System.out.println(new_pseudo);
-							pseudo_ok = Controller.change_username(new_pseudo);
-						}
+		public void actionPerformed(ActionEvent e) {
+			ChangeUsername changed = new ChangeUsername("Enter your new pseudo please. ");
+			String new_pseudo = changed.get_new_username();
+			if(new_pseudo != null && !new_pseudo.equals("")) {
+				boolean pseudo_ok = Controller.change_username(new_pseudo);
+				while(!pseudo_ok) {
+					changed = new ChangeUsername("This pseudo already exists, please enter a new one.");
+					if(new_pseudo != null && !new_pseudo.equals("")) {
+						new_pseudo = changed.get_new_username();
+						pseudo_ok = Controller.change_username(new_pseudo);
 					}
 				}
 			}
+		}
 
-			//Required by DocumentListener.
-			public void insertUpdate(DocumentEvent e) {
+		//Required by DocumentListener.
+		public void insertUpdate(DocumentEvent e) {
+			enableButton();
+		}
+
+		//Required by DocumentListener.
+		public void removeUpdate(DocumentEvent e) {
+			handleEmptyTextField(e);
+		}
+
+		//Required by DocumentListener.
+		public void changedUpdate(DocumentEvent e) {
+			if (!handleEmptyTextField(e)) {
 				enableButton();
 			}
+		}
 
-			//Required by DocumentListener.
-			public void removeUpdate(DocumentEvent e) {
-				handleEmptyTextField(e);
-			}
-
-			//Required by DocumentListener.
-			public void changedUpdate(DocumentEvent e) {
-				if (!handleEmptyTextField(e)) {
-					enableButton();
-				}
-			}
-
-			private void enableButton() {
-				if (!alreadyEnabled) {
-					changeUsernameButton.setEnabled(true);
-				}
-			}
-
-			private boolean handleEmptyTextField(DocumentEvent e) {
-				if (e.getDocument().getLength() <= 0) {
-					changeUsernameButton.setEnabled(false);
-					alreadyEnabled = false;
-					return true;
-				}
-				return false;
+		private void enableButton() {
+			if (!alreadyEnabled) {
+				changeUsernameButton.setEnabled(true);
 			}
 		}
+
+		private boolean handleEmptyTextField(DocumentEvent e) {
+			if (e.getDocument().getLength() <= 0) {
+				changeUsernameButton.setEnabled(false);
+				alreadyEnabled = false;
+				return true;
+			}
+			return false;
+		}
+	}
+
+	//This listener is shared by the text field and the enter button.
+	class FileListener implements ActionListener, DocumentListener {
+		private boolean alreadyEnabled = false;
+		private JButton fileButton;
+
+		public FileListener(JButton button) {
+			this.fileButton = button;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int returnVal = fc.showOpenDialog(ChatBoxPanel.this);
+
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					System.out.println(file.getAbsolutePath());
+
+					Date date = new Date(System.currentTimeMillis());
+					String to = Controller.get_host_address(Window.getAdressee());
+					if (TcpServerSocket.getConnections().containsKey(to)) {
+						TcpServerSocket.getConnections().get(to).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
+					}
+					else {
+						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
+
+					}
+					
+					Window.messages.setContent(Window.getAdressee());
+
+				}
+
+			} catch (Exception e1) {
+				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
+			} 
+
+		}
+
+		//Required by DocumentListener.
+		public void insertUpdate(DocumentEvent e) {
+			enableButton();
+		}
+
+		//Required by DocumentListener.
+		public void removeUpdate(DocumentEvent e) {
+			handleEmptyTextField(e);
+		}
+
+		//Required by DocumentListener.
+		public void changedUpdate(DocumentEvent e) {
+			if (!handleEmptyTextField(e)) {
+				enableButton();
+			}
+		}
+
+		private void enableButton() {
+			if (!alreadyEnabled) {
+				fileButton.setEnabled(true);
+			}
+		}
+
+		private boolean handleEmptyTextField(DocumentEvent e) {
+			if (e.getDocument().getLength() <= 0) {
+				fileButton.setEnabled(false);
+				alreadyEnabled = false;
+				return true;
+			}
+			return false;
+		}
+	}
 }

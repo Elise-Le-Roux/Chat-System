@@ -4,8 +4,10 @@ import java.io.*;
 import java.net.*;
 
 import GUI.Window;
+import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;
+import controller.TCPMessage.TypeNextMessage;
 import database.DBManager;
 
 public class TcpSocket extends Thread {
@@ -13,20 +15,25 @@ public class TcpSocket extends Thread {
 	Socket socketOfServer;
 	
 	 // to stop the thread
-    private boolean exit;
+	 static volatile boolean exit = false;
     
     ObjectInputStream is;
     ObjectOutputStream os;
+    DataOutputStream dataOutputStream;
+    DataInputStream dataInputStream;
+    TypeNextMessage msgType;
 
-	public TcpSocket(Socket socketOfServer) {
-		this.socketOfServer = socketOfServer;
-		this.exit = false;
-		try {
-			this.os = new ObjectOutputStream(socketOfServer.getOutputStream());
-			this.is = new ObjectInputStream(socketOfServer.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    public TcpSocket(Socket socketOfServer) {
+    	this.socketOfServer = socketOfServer;
+    	this.exit = false;
+    	try {
+    		this.os = new ObjectOutputStream(socketOfServer.getOutputStream());
+    		this.is = new ObjectInputStream(socketOfServer.getInputStream());
+    		this.dataInputStream = new DataInputStream(socketOfServer.getInputStream());
+            this.dataOutputStream = new DataOutputStream(socketOfServer.getOutputStream());
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
 		}
 		start();
 	}
@@ -41,19 +48,39 @@ public class TcpSocket extends Thread {
 			DBManager DB = new DBManager();
 			DB.connect();
 			TCPMessage msg;
-			msg = (TCPMessage) is.readObject();
+			msgType = TypeNextMessage.TEXT;
+			String fileName = null;
+			//msg = (TCPMessage) is.readObject();
 
-			while (!exit & msg != null) {
-				System.out.println("TEST");
-				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
-				Window.messages.setContent(Window.getAdressee()); // a changer
-				msg = (TCPMessage) is.readObject();
+			while (!exit) {
+				if (msgType.equals(TypeNextMessage.TEXT)) {
+					msg = (TCPMessage) is.readObject();
+					if(msg.getTypeNextMessage().equals(TypeNextMessage.TEXT)) {
+						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), "TEXT");
+						
+					}
+					msgType = msg.getTypeNextMessage();
+					if (msgType.equals(TypeNextMessage.FILE)) {
+						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), "FILE");
+						fileName = msg.getContent();
+					}
+					Window.messages.setContent(Window.getAdressee()); // a changer
+				}
+				else if (msgType.equals(TypeNextMessage.FILE)){
+					int bytes = 0;
+			        FileOutputStream fileOutputStream = new FileOutputStream(fileName); // A changer
+			        long size = dataInputStream.readLong();     // read file size
+			        byte[] buffer = new byte[4*1024];
+			        while (size > 0 && (bytes = dataInputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+			            fileOutputStream.write(buffer,0,bytes);
+			            size -= bytes;      // read up to file size
+			        }
+			        fileOutputStream.close();
+					msgType = TypeNextMessage.TEXT;
+				}
 			}
 
-
-				  //msg = (TCPMessage) is.readObject();
-			  System.out.println("close " + socketOfServer.toString());
-			  socketOfServer.close();
+			socketOfServer.close();
 			  //is.close();
 			
 			/* TCPMessage msg;
@@ -70,8 +97,12 @@ public class TcpSocket extends Thread {
 			socketOfServer.close();
 			in.close(); */
 
-		} catch (IOException e) {
-			System.out.println("Input exception TcpSocket: " + e.getMessage());
+		} catch (IOException e) { // raised when is.readObject is null
+			try {
+				socketOfServer.close(); 
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		} catch (ClassNotFoundException e) {
 			System.out.println("class TCPMessage not found " + e.getMessage());
 		}
@@ -81,9 +112,12 @@ public class TcpSocket extends Thread {
 		try {
 			
 			os.writeObject(msg);
-			DBManager DB = new DBManager();
-			DB.connect();
-			DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime());
+			if(!msg.getSender().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
+				DBManager DB = new DBManager();
+				DB.connect();
+				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), msg.getTypeNextMessage().toString());
+				Window.messages.setContent(Window.getAdressee());
+			}
 		} catch (IOException e) {
 			System.out.println("Output exception: " + e.getMessage());
 		}
@@ -95,4 +129,21 @@ public class TcpSocket extends Thread {
 			System.out.println("Output exception: " + e.getMessage());
 		} */
 	}
+	
+	public void sendFile(TCPMessage msg, String path) throws Exception{
+		send_msg(msg); // with TypeNextMessage.FILE
+        int bytes = 0;
+        File file = new File(path);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        
+        // send file size
+        dataOutputStream.writeLong(file.length());  
+        // break file into chunks
+        byte[] buffer = new byte[4*1024];
+        while ((bytes=fileInputStream.read(buffer))!=-1){
+            dataOutputStream.write(buffer,0,bytes);
+            dataOutputStream.flush();
+        }
+        fileInputStream.close();
+    }
 }

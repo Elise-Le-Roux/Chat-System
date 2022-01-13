@@ -9,15 +9,16 @@ public class TCPMessage implements Serializable{
 	InetAddress from; 
 	InetAddress to;
 	String content;
-	Date time;
-	boolean connected; // a enlever
+	Date time;// a enlever
+	public static enum TypeNextMessage {FILE, TEXT};
+	TypeNextMessage typeNextMessage;
 	
-	public TCPMessage(InetAddress from, InetAddress to, String content, Date time, Boolean connected) {
+	public TCPMessage(InetAddress from, InetAddress to, String content, Date time, TypeNextMessage type) {
 		this.from = from;
 		this.to = to;
 		this.content = content;
 		this.time = time;
-		this.connected = connected;
+		this.typeNextMessage = type;
 	}
 	
 	public InetAddress getSender() {
@@ -32,18 +33,21 @@ public class TCPMessage implements Serializable{
 	public Date getTime() {
 		return this.time;
 	}
-	public Boolean getConnected() {
-		return this.connected;
+	public TypeNextMessage getTypeNextMessage() {
+		return this.typeNextMessage;
 	}
-	public void setConnected(boolean status) {
-		this.connected = status;
-	}
+	
 	public String afficherMsg() {
 		String from1 = this.getSender().getHostAddress();
 		String to1 = this.getReceiver().getHostAddress();
 		String content1 = this.getContent();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String time1 = formatter.format(this.getTime());
-		return ("From : " + from1 + ", To : " + to1 + ", Time : " + time1 + "\nContent : " + content1 + "\n\n");
+		if(this.getTypeNextMessage().equals(TypeNextMessage.TEXT)) {
+			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nContent: " + content1 + "\n\n");
+		}
+		else {
+			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile saved at: " + content1 + "\n\n");
+		}
 	}
 }

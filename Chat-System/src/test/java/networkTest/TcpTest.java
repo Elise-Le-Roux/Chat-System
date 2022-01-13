@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.Date;
 
 import controller.TCPMessage;
+import controller.TCPMessage.TypeNextMessage;
 import database.DBManager;
 
 public class TcpTest {
@@ -28,8 +29,8 @@ public class TcpTest {
 			System.out.println("Connections B = " + UserB.getConnections());
 			System.out.println("Hostname = " + hostnameAB);
 			Date date = new Date(System.currentTimeMillis());
-			socketA.send_msg(new TCPMessage(addressAB,addressAB,"hello",date,true));
-			socketB.send_msg(new TCPMessage(addressAB,addressAB,"helloword",date,true));
+			socketA.send_msg(new TCPMessage(addressAB,addressAB,"hello",date, TypeNextMessage.TEXT));
+			socketB.send_msg(new TCPMessage(addressAB,addressAB,"helloword",date, TypeNextMessage.TEXT));
 			System.out.println("\n");
 			DBManager.afficher_BDD();
 			
