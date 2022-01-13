@@ -61,7 +61,8 @@ public class TcpSocket extends Thread {
 					}
 					msgType = msg.getTypeNextMessage();
 					if (msgType.equals(TypeNextMessage.FILE)) {
-						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), "FILE");
+						String path = System.getProperty("user.dir") + "/" + msg.getContent();
+						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), path, msg.getTime(), "FILE");
 						fileName = msg.getContent();
 					}
 					Window.messages.setContent(Window.getAdressee()); // a changer
@@ -116,7 +117,6 @@ public class TcpSocket extends Thread {
 				DBManager DB = new DBManager();
 				DB.connect();
 				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), msg.getTypeNextMessage().toString());
-				Window.messages.setContent(Window.getAdressee());
 			}
 		} catch (IOException e) {
 			System.out.println("Output exception: " + e.getMessage());

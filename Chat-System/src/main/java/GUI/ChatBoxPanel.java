@@ -150,6 +150,9 @@ public class ChatBoxPanel extends JPanel {
 					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
 
 				}
+				if (!InetAddress.getByName(Controller.get_address()).equals(InetAddress.getByName(to))) {
+					Window.messages.setContent(Window.getAdressee());
+				}
 			} catch (Exception e1) {
 				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
 			} 
@@ -269,13 +272,11 @@ public class ChatBoxPanel extends JPanel {
 					}
 					else {
 						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
-
 					}
-					
-					Window.messages.setContent(Window.getAdressee());
-
+					if (!InetAddress.getByName(Controller.get_address()).equals(InetAddress.getByName(to))) {
+						Window.messages.setContent(Window.getAdressee());
+					}
 				}
-
 			} catch (Exception e1) {
 				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
 			} 
