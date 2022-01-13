@@ -149,7 +149,7 @@ public class Window extends JPanel {
 	}
 	
 	public void refresh_list() {
-		list.refresh();
+		list.refresh(); // ajouter if si la liste n'a pas encore été créée 
 	}
 	
 	

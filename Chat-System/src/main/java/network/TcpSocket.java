@@ -57,7 +57,6 @@ public class TcpSocket extends Thread {
 					msg = (TCPMessage) is.readObject();
 					if(msg.getTypeNextMessage().equals(TypeNextMessage.TEXT)) {
 						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), "TEXT");
-						
 					}
 					msgType = msg.getTypeNextMessage();
 					if (msgType.equals(TypeNextMessage.FILE)) {
@@ -113,7 +112,8 @@ public class TcpSocket extends Thread {
 		try {
 			
 			os.writeObject(msg);
-			if(!msg.getSender().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
+			System.out.println(msg.getSender().getHostAddress() + "     " + Controller.get_address());
+			if(!msg.getReceiver().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
 				DBManager DB = new DBManager();
 				DB.connect();
 				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), msg.getTypeNextMessage().toString());
@@ -131,7 +131,22 @@ public class TcpSocket extends Thread {
 	}
 	
 	public void sendFile(TCPMessage msg, String path) throws Exception{
-		send_msg(msg); // with TypeNextMessage.FILE
+		//send_msg(msg); // with TypeNextMessage.FILE
+		try {
+			
+			os.writeObject(msg);
+			System.out.println(msg.getSender().getHostAddress() + "     " + Controller.get_address());
+			if(!msg.getReceiver().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
+				DBManager DB = new DBManager();
+				DB.connect();
+				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), path, msg.getTime(), msg.getTypeNextMessage().toString());
+			}
+		} catch (IOException e) {
+			System.out.println("Output exception: " + e.getMessage());
+		}
+		
+		
+		
         int bytes = 0;
         File file = new File(path);
         FileInputStream fileInputStream = new FileInputStream(file);

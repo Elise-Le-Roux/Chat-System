@@ -41,11 +41,8 @@ public class MessagePanel extends JPanel {
 		list_msg = DB.select_conv(Controller.get_address(),Controller.get_host_address(pseudo)); 
 		textArea.selectAll();
 		textArea.replaceSelection("");
-		System.out.println("*********************SET CONTENT*********************************");
 		for(TCPMessage msg : list_msg) {
-			System.out.println(msg.afficherMsg());
 			textArea.append(msg.afficherMsg());
 		}
-		System.out.println("******************************************************************");
 	}
 }

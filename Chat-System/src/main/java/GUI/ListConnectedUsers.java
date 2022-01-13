@@ -43,7 +43,6 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	//For the chatPanel
 	public void valueChanged(ListSelectionEvent evt) { 
 		if( evt.getValueIsAdjusting()) {
-			System.out.println("shddddddddfgqsjdghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
 			Window.messages.setContent((String) list.getSelectedValue());
 			Window.setAdressee((String) list.getSelectedValue());
 		}

@@ -46,8 +46,13 @@ public class TCPMessage implements Serializable{
 		if(this.getTypeNextMessage().equals(TypeNextMessage.TEXT)) {
 			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nContent: " + content1 + "\n\n");
 		}
-		else {
-			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile saved at: " + content1 + "\n\n");
+		else { // Type file
+			if( from1.equals(Controller.get_address()) & !from1.equals(to1)) {
+				return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile sent: " + content1 + "\n\n");
+			}
+			else {
+				return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile saved at: " + content1 + "\n\n");
+			}
 		}
 	}
 }
