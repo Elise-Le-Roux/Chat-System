@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import controller.ConnectedUsers;
+import controller.Users;
 import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;

@@ -19,8 +19,7 @@ public class main {
 		final Window window = new Window();
 		
 		
-		Controller control = new Controller(window, Socket, UserA);
-		Controller.init();
+		Controller control = new Controller(window, Socket, UserA, DB);
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				window.createAndShowGUI();

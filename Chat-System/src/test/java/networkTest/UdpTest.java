@@ -2,7 +2,7 @@ package networkTest;
 
 import java.net.InetAddress;
 
-import controller.ConnectedUsers;
+import controller.Users;
 import network.UDPSocket;
 
 public class UdpTest {

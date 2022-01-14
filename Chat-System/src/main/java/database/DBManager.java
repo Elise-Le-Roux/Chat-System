@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import controller.TCPMessage;
 import controller.User;
+import controller.Users;
 import controller.TCPMessage.TypeNextMessage;
 
 public class DBManager {
@@ -38,6 +39,36 @@ public class DBManager {
 		} catch (SQLException e) {
 			System.out.println("SQL INSERT exception" + e.getMessage());
 		}
+	}
+	
+	public void add_new_user(String pseudo, String address) {
+		try {
+			String query = "INSERT INTO users values (?,?)";
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1,pseudo);
+			pstmt.setString(2,address);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL INSERT exception 2" + e.getMessage());
+		}
+	}
+	
+	public ArrayList<User> select_users() {
+		try {
+			ArrayList<User> users = new ArrayList<User>();
+			String query = "SELECT * FROM users";
+			Statement stmt;
+	        stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				users.add(new User(rs.getString(1), rs.getString(2), false));
+			}
+			return users;
+		} catch (SQLException e) {
+			System.out.println("SQL exception select 2" + e.getMessage());
+			return null;
+		}
+		
 	}
 
 	public ArrayList<TCPMessage> select_conv(String from, String to) {
@@ -107,6 +138,16 @@ public class DBManager {
 			stmt.executeUpdate(query1);
 		} catch (SQLException e) {
 			// Do nothing if database already exists
+		} finally {
+			String query2 = "CREATE TABLE users ("
+					+ "pseudo VARCHAR(100), "
+					+ "address VARCHAR(100) ";// adresse ip
+			try {
+				Statement stmt2 = conn.createStatement();
+				stmt2.executeUpdate(query2);
+			} catch (SQLException e) {
+				// Do nothing if database already exists
+			}
 		}
 	}
 

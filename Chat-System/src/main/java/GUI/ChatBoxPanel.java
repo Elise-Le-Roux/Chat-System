@@ -26,7 +26,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import GUI.WelcomePanel.EnterListener;
-import controller.ConnectedUsers;
+import controller.Users;
 import controller.Controller;
 import controller.TCPMessage;
 import controller.specificUser;

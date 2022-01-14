@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 
 import GUI.Window;
+import database.DBManager;
 import network.TcpServerSocket;
 import network.TcpSocket;
 import network.UDPSocket;
@@ -14,20 +15,29 @@ public class Controller {
 	static TcpServerSocket tcpSocket;
 	static UDPSocket udpSocket;
 	static specificUser specUser;
-	static ConnectedUsers connected_users;
+	static Users connected_users;
+	static DBManager DB;
 	
-	public Controller(Window w, TcpServerSocket tcpS, UDPSocket udpS) {
+	public Controller(Window w, TcpServerSocket tcpS, UDPSocket udpS, DBManager db) {
 		window = w;
 		tcpSocket = tcpS;
 		udpSocket = udpS;
+		specUser = new specificUser(UDPSocket.getLocalAddr().getHostAddress());
+		DB = db;
+		DB.connect();
+		DB.init();
+		connected_users = new Users(DB.select_users());
+		udpSocket.get_connected_users();
 	}
+	
+	/************** Methods to control the list of users **************/
 	
 	static public void add_connected_user(String pseudo, String address) {
 		connected_users.addUser(pseudo,address);
 		window.refresh_list();
 	}
 	
-	static public void remove_connected_user(String pseudo, String address) {
+	static public void remove_connected_user(String pseudo, String address) { // Pas besoin ????
 		if (!address.equals(specUser.get_address())) {
 			connected_users.removeUser(pseudo);
 			window.refresh_list();
@@ -35,6 +45,18 @@ public class Controller {
 		TcpSocket sock = tcpSocket.getConnections().get(address);
 		if(sock != null) {
 			tcpSocket.getConnections().remove(address);
+			sock.kill();
+		}
+	}
+	
+	static public void set_disconnected_user(String pseudo, String address) {
+		if (!address.equals(specUser.get_address())) {
+			connected_users.changeStatus(pseudo, false);
+			window.refresh_list();
+		}
+		TcpSocket sock = TcpServerSocket.getConnections().get(address);
+		if(sock != null) {
+			TcpServerSocket.getConnections().remove(address);
 			sock.kill();
 		}
 	}
@@ -80,13 +102,16 @@ public class Controller {
 		udpSocket.get_connected_users();
 	}
 	
-	static public void init() {
-		specUser = new specificUser(UDPSocket.getLocalAddr().getHostAddress());
-		connected_users = new ConnectedUsers();
-	}
-	
 	static public ArrayList<User> get_list_connected_users() {
 		return connected_users.getConnectedUsers();
+	}
+	
+	static public ArrayList<User> get_list_disconnected_users() {
+		return connected_users.getConnectedUsers();
+	}
+	
+	static public ArrayList<User> get_list_users() {
+		return connected_users.getUsers();
 	}
 	
 	static public String get_address() {

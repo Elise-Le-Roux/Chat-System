@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
-import controller.ConnectedUsers;
+import controller.Users;
 import controller.Controller;
 import controller.User;
 import controller.specificUser;

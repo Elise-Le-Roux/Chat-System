@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 
 import GUI.Window;
-import controller.ConnectedUsers;
+import controller.Users;
 import controller.Controller;
 import controller.UDPMessage;
 import controller.UDPMessage.typeMessage;
@@ -47,7 +47,7 @@ public class UDPSocket extends Thread{
 					Controller.add_connected_user(pseudo,hostAddress);
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
-					Controller.remove_connected_user(pseudo, hostAddress);
+					Controller.set_disconnected_user(pseudo, hostAddress);
 				}
 				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
 					if(Controller.get_pseudo() != null) {
