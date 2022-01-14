@@ -41,6 +41,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
         //list.setSelectedIndex(0);      
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
+        list.setCellRenderer(new IconListCellRenderer());
         JScrollPane listScrollPane = new JScrollPane(list);
         add(listScrollPane);
         
@@ -55,11 +56,12 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	} 
 	
 	public void refresh() {
+		System.out.println("REFRESH LIST");
 		listModel = new DefaultListModel();
 		DBManager DB = new DBManager();
 		DB.connect();
 		ArrayList<User> list_user = null;
-		list_user = DB.select_users(); 
+		list_user = Controller.get_list_users();//DB.select_users(); 
 		for( User u : list_user) {
 			listModel.addElement(u.getPseudo());
 		}
@@ -80,13 +82,21 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             if( c instanceof JLabel ) {
                 JLabel label = ( JLabel )c;
                 Image img = null;
-                try {
-					img = ImageIO.read(getClass().getResource("/GUI/icon.png"));
-				} catch (IOException e) {
-					System.out.println("Icone not found");
-				}
+                if (Controller.isConnected((String)value)) {
+                	try {
+                		img = ImageIO.read(getClass().getResource("/controller/point_vert.png"));
+                	} catch (IOException e) {
+                		System.out.println("Icone not found");
+                	}
+                } else {
+                	try {
+                		img = ImageIO.read(getClass().getResource("/controller/point_rouge.png"));
+                	} catch (IOException e) {
+                		System.out.println("Icone not found");
+                	}
+                }
                 ImageIcon ii = new ImageIcon(img);
-                int scale = 5; // 2 times smaller
+                int scale = 30; // 2 times smaller
             	int width = ii.getIconWidth();
             	int newWidth = width / scale;
                 label.setIcon(new ImageIcon(ii.getImage().getScaledInstance(newWidth, -1,
@@ -95,7 +105,4 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             return c;
         }
     }
-	
-	
-	
 }

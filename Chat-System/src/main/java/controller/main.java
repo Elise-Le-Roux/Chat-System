@@ -10,21 +10,22 @@ import network.UDPSocket;
 public class main {
 
 	public static void main(String[] args) {
-		DBManager DB = new DBManager();
-		DB.connect();
-		//DB.drop();
-		DB.init();
-		UDPSocket UserA = new UDPSocket();
-		TcpServerSocket Socket = new TcpServerSocket(3000);
 		final Window window = new Window();
-		
-		
-		Controller control = new Controller(window, Socket, UserA, DB);
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+		window.createAndShowGUI();
+		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				window.createAndShowGUI();
 			}
-		});
+		}); */
+		DBManager DB = new DBManager();
+		//DB.connect();
+		//DB.drop();
+		UDPSocket UserA = new UDPSocket();
+		TcpServerSocket Socket = new TcpServerSocket(3000);
+		
+		
+		Controller control = new Controller(window, Socket, UserA, DB);
+		
 	}
 
 }

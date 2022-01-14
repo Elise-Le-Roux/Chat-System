@@ -139,9 +139,10 @@ public class DBManager {
 		} catch (SQLException e) {
 			// Do nothing if database already exists
 		} finally {
+			
 			String query2 = "CREATE TABLE users ("
 					+ "pseudo VARCHAR(100), "
-					+ "address VARCHAR(100) ";// adresse ip
+					+ "address VARCHAR(100)) ";// adresse ip
 			try {
 				Statement stmt2 = conn.createStatement();
 				stmt2.executeUpdate(query2);

@@ -15,7 +15,7 @@ public class Controller {
 	static TcpServerSocket tcpSocket;
 	static UDPSocket udpSocket;
 	static specificUser specUser;
-	static Users connected_users;
+	static Users users;
 	static DBManager DB;
 	
 	public Controller(Window w, TcpServerSocket tcpS, UDPSocket udpS, DBManager db) {
@@ -26,20 +26,20 @@ public class Controller {
 		DB = db;
 		DB.connect();
 		DB.init();
-		connected_users = new Users(DB.select_users());
+		users = new Users(DB.select_users()); // the attributes "connected" are set to false
 		udpSocket.get_connected_users();
 	}
 	
 	/************** Methods to control the list of users **************/
 	
 	static public void add_connected_user(String pseudo, String address) {
-		connected_users.addUser(pseudo,address);
+		users.addConnectedUser(pseudo,address);
 		window.refresh_list();
 	}
 	
 	static public void remove_connected_user(String pseudo, String address) { // Pas besoin ????
 		if (!address.equals(specUser.get_address())) {
-			connected_users.removeUser(pseudo);
+			users.removeUser(pseudo);
 			window.refresh_list();
 		}
 		TcpSocket sock = tcpSocket.getConnections().get(address);
@@ -51,7 +51,7 @@ public class Controller {
 	
 	static public void set_disconnected_user(String pseudo, String address) {
 		if (!address.equals(specUser.get_address())) {
-			connected_users.changeStatus(pseudo, false);
+			users.changeStatus(pseudo, false);
 			window.refresh_list();
 		}
 		TcpSocket sock = TcpServerSocket.getConnections().get(address);
@@ -68,7 +68,7 @@ public class Controller {
 	}
 	
 	static public void change_pseudo_connected_user(String old_pseudo, String new_pseudo) {
-		connected_users.changePseudo(old_pseudo, new_pseudo);
+		users.changePseudo(old_pseudo, new_pseudo);
 		window.refresh_list();
 	}
 	
@@ -103,16 +103,21 @@ public class Controller {
 	}
 	
 	static public ArrayList<User> get_list_connected_users() {
-		return connected_users.getConnectedUsers();
+		return users.getConnectedUsers();
 	}
 	
 	static public ArrayList<User> get_list_disconnected_users() {
-		return connected_users.getConnectedUsers();
+		return users.getDisconnectedUsers();
 	}
 	
 	static public ArrayList<User> get_list_users() {
-		return connected_users.getUsers();
+		return users.getUsers();
 	}
+	
+	static public boolean isConnected(String pseudo) {
+		return users.isConnected(pseudo);
+	}
+	
 	
 	static public String get_address() {
 		return specUser.get_address();
@@ -130,7 +135,7 @@ public class Controller {
 	static public String get_host_address(String pseudo) {
 		String result = null;
 		try {
-			result = connected_users.getHostAddress(pseudo);
+			result = users.getHostAddress(pseudo);
 		} catch (Exception e) {
 			System.out.println("Exception controller : pseudo not found ");
 		}

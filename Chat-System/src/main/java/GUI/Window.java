@@ -109,7 +109,7 @@ public class Window extends JPanel {
 		list.setOpaque(true); //content panes must be opaque
 		frame.add(list, BorderLayout.WEST);
 		
-		Controller.get_connected_users();
+		//Controller.get_connected_users();
 
 		//Create and set up the content pane.
 		/* JComponent newContentPane = new WelcomePanel();

@@ -14,7 +14,7 @@ public class Users {
 		this.listUsers = users;
 	}
 	
-	public void addUser(String pseudo, String hostAddress) {
+	public void addConnectedUser(String pseudo, String hostAddress) {
 		boolean exists = false;
 		if (!listUsers.isEmpty()) {
 			for (User u : listUsers) {
@@ -28,6 +28,9 @@ public class Users {
 		}
 		else {
 			listUsers.add(new User(pseudo,hostAddress,true));
+			DBManager DB = new DBManager();
+			DB.connect();
+			DB.add_new_user(pseudo, hostAddress);
 		}
 	}
 	
@@ -94,4 +97,13 @@ public class Users {
 		return result;
 	}
 	
+	public boolean isConnected(String pseudo) {
+		boolean result = false;
+		for (User u : listUsers) {
+			if (u.getPseudo().equals(pseudo)) {
+				result = u.getStatus();
+			}
+		}
+		return result;
+	}
 }
