@@ -53,6 +53,22 @@ public class DBManager {
 		}
 	}
 	
+	public void change_pseudo(String pseudo, String address) {
+		try {
+			String query = "UPDATE users"
+					+ "	SET pseudo = ?"
+					+ "	WHERE address = ?" ;
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1,pseudo);
+			pstmt.setString(2,address);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL INSERT exception 3" + e.getMessage());
+		}
+	}
+	
+	
+	
 	public ArrayList<User> select_users() {
 		try {
 			ArrayList<User> users = new ArrayList<User>();
@@ -141,8 +157,8 @@ public class DBManager {
 		} finally {
 			
 			String query2 = "CREATE TABLE users ("
-					+ "pseudo VARCHAR(100), "
-					+ "address VARCHAR(100)) ";// adresse ip
+					+ "pseudo VARCHAR(100) NOT NULL UNIQUE,"
+					+ "address VARCHAR(100) NOT NULL UNIQUE)";// adresse ip
 			try {
 				Statement stmt2 = conn.createStatement();
 				stmt2.executeUpdate(query2);
@@ -152,9 +168,21 @@ public class DBManager {
 		}
 	}
 
-	public void drop() {
+	public void drop_historique() {
 		try {
 			String query = "DROP TABLE historique";
+			Statement stmt;
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void drop_users() {
+		try {
+			String query = "DROP TABLE users";
 			Statement stmt;
 			stmt = conn.createStatement();
 			stmt.executeUpdate(query);

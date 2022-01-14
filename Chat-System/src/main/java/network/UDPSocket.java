@@ -2,16 +2,11 @@ package network;
 
 import java.io.*;
 import java.net.*;
-import java.sql.Date;
-import java.util.Arrays;
 import java.util.Enumeration;
 
-import GUI.Window;
-import controller.Users;
 import controller.Controller;
 import controller.UDPMessage;
 import controller.UDPMessage.typeMessage;
-import controller.specificUser;
 
 public class UDPSocket extends Thread{
 	
@@ -58,7 +53,7 @@ public class UDPSocket extends Thread{
 					Controller.change_pseudo_connected_user(pseudo, msg.getNewPseudo());
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
-					Controller.add_connected_user(pseudo,hostAddress);
+					Controller.add_connected_user(pseudo,hostAddress); // a enlever
 				}
 				else {
 					System.out.println("Message not recognized");

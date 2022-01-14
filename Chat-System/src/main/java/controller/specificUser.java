@@ -17,10 +17,10 @@ public class specificUser {
 
 	 public boolean chooseUsername(String username) {
 		boolean result = true;
-		ArrayList<User> listUsers = Controller.get_list_connected_users();
+		ArrayList<User> listUsers = Controller.get_list_users();
 		if (!listUsers.isEmpty()) {
 			for( User u : listUsers) {
-				if(u.getPseudo().equals(username)) {
+				if(u.getPseudo().equals(username) & !u.getHostAddress().equals(this.address)) {
 					result = false;
 				}
 			}
@@ -35,8 +35,8 @@ public class specificUser {
 	public boolean changeUsername(String new_pseudo) {
 		boolean result = true;
 		String old_pseudo = this.pseudo;
-		for( User u : Controller.get_list_connected_users()) {
-			if(u.getPseudo().equals(new_pseudo)) {
+		for( User u : Controller.get_list_users()) {
+			if(u.getPseudo().equals(new_pseudo) & !u.getHostAddress().equals(this.address)) {
 				result = false;
 			}
 		}

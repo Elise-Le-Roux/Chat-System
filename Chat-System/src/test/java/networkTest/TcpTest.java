@@ -17,7 +17,7 @@ public class TcpTest {
 		try {
 			DBManager DB = new DBManager();
 			DB.connect();
-			DB.drop();
+			DB.drop_historique();
 			DB.init();
 			hostnameAB = InetAddress.getLocalHost().getHostName(); // Same hostname because we test on the same computer
 			InetAddress addressAB = InetAddress.getLocalHost();

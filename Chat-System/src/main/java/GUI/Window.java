@@ -1,24 +1,11 @@
 package GUI;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionListener;
-import controller.Users;
 import controller.Controller;
-import controller.User;
-import controller.specificUser;
-import database.DBManager;
-import network.TcpServerSocket;
-import network.UDPSocket;
 
 public class Window extends JPanel {
 

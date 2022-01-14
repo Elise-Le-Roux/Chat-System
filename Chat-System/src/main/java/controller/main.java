@@ -18,8 +18,8 @@ public class main {
 			}
 		}); */
 		DBManager DB = new DBManager();
-		//DB.connect();
-		//DB.drop();
+		/*DB.connect();
+		DB.drop_users();*/
 		UDPSocket UserA = new UDPSocket();
 		TcpServerSocket Socket = new TcpServerSocket(3000);
 		

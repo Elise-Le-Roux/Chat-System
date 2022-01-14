@@ -27,6 +27,9 @@ public class Controller {
 		DB.connect();
 		DB.init();
 		users = new Users(DB.select_users()); // the attributes "connected" are set to false
+		if(DB.select_users() != null) {
+			window.refresh_list();
+		}
 		udpSocket.get_connected_users();
 	}
 	

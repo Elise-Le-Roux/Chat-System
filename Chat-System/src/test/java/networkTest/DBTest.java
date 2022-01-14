@@ -15,7 +15,7 @@ public class DBTest {
 		DB.connect();
 		DBManager DB2 = new DBManager();
 		DB2.connect();
-		DB.drop();
+		DB.drop_historique();
 		DB.init();
 		//DB.connect();
 		String hostname1 = "";

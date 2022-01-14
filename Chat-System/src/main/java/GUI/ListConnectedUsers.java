@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -13,22 +11,19 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import controller.Users;
+
 import controller.Controller;
-import controller.TCPMessage;
 import controller.User;
-import database.DBManager;
-import network.UDPSocket;
 
 public class ListConnectedUsers extends JPanel implements ListSelectionListener {
 
 	//For the list of connected users 
-	private JList list;
-	private DefaultListModel listModel;
+	private JList<String> list;
+	private DefaultListModel<String> listModel;
 
 	public ListConnectedUsers(){
 		super(new BorderLayout());
-		listModel = new DefaultListModel();
+		listModel = new DefaultListModel<String>();
 		
 		
 		/*for( User u : ConnectedUsers.getConnectedUsers()) {
@@ -36,7 +31,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 		} */
 		
 		//Create the list and put it in a scroll pane.
-        list = new JList(listModel);
+        list = new JList<String>(listModel);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         //list.setSelectedIndex(0);      
         list.addListSelectionListener(this);
@@ -56,12 +51,9 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	} 
 	
 	public void refresh() {
-		System.out.println("REFRESH LIST");
-		listModel = new DefaultListModel();
-		DBManager DB = new DBManager();
-		DB.connect();
+		listModel = new DefaultListModel<String>();
 		ArrayList<User> list_user = null;
-		list_user = Controller.get_list_users();//DB.select_users(); 
+		list_user = Controller.get_list_users();
 		for( User u : list_user) {
 			listModel.addElement(u.getPseudo());
 		}
@@ -69,11 +61,12 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	}
 	
 	private class IconListCellRenderer extends DefaultListCellRenderer {
-        public IconListCellRenderer() {
+
+		public IconListCellRenderer() {
             super();
         }
   
-        public Component getListCellRendererComponent( JList list,
+        public Component getListCellRendererComponent( JList<?> list,
                 Object value, int index, boolean isSelected,
                 boolean cellHasFocus ) {
             Component c = super.getListCellRendererComponent( list,

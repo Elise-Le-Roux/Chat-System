@@ -1,9 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-
-import javax.swing.DefaultListModel;
-
 import database.DBManager;
 
 public class Users {
@@ -16,15 +13,18 @@ public class Users {
 	
 	public void addConnectedUser(String pseudo, String hostAddress) {
 		boolean exists = false;
-		if (!listUsers.isEmpty()) {
+		
+		if (listUsers != null && !listUsers.isEmpty()) {
 			for (User u : listUsers) {
-				if (u.getPseudo().equals(pseudo)) {
+				if (u.getHostAddress().equals(hostAddress)) {
 					exists = true;
 				}
 			}
 		}
+		
 		if (exists) {
-			this.changeStatus(pseudo, true);
+			this.changeStatus(hostAddress, true);
+			this.changePseudo(hostAddress, pseudo);
 		}
 		else {
 			listUsers.add(new User(pseudo,hostAddress,true));
@@ -44,17 +44,20 @@ public class Users {
 		listUsers.remove(usr);
 	}
 	
-	public void changePseudo(String old_pseudo, String new_pseudo) {
+	public void changePseudo(String hostAddress, String new_pseudo) {
 		for (User u : listUsers) {
-			if (u.getPseudo().equals(old_pseudo)) {
+			if (u.getHostAddress().equals(hostAddress)) {
 				u.setPseudo(new_pseudo);
+				DBManager DB = new DBManager();
+				DB.connect();
+				DB.change_pseudo(new_pseudo, hostAddress);
 			}
 		}
 	}
 	
-	public void changeStatus(String pseudo, boolean status) {
+	public void changeStatus(String hostAddress, boolean status) {
 		for (User u : listUsers) {
-			if (u.getPseudo().equals(pseudo)) {
+			if (u.getHostAddress().equals(hostAddress)) {
 				u.setStatus(status);
 			}
 		}
