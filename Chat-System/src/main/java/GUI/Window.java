@@ -17,6 +17,7 @@ public class Window extends JPanel {
 	static JPanel welcome;
 	static String adressee;
 	static ListConnectedUsers list;
+	static ChatBoxPanel chatBox;
 
 	private static void initLookAndFeel() {
 
@@ -120,10 +121,12 @@ public class Window extends JPanel {
 
 	// When a valid pseudo is entered the window's view change
 	public static void change_view() {
+
+
+		//list.list.setEnabled(true);
 		frame.remove(welcome);
-		
 		messages = new MessagePanel();
-		JPanel chatBox = new ChatBoxPanel();
+		chatBox = new ChatBoxPanel();
 
 		//Create a split pane with the two scroll panes in it.
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,

@@ -38,6 +38,8 @@ public class ChatBoxPanel extends JPanel {
 
 	private JTextField message;
 	JFileChooser fc;
+	JButton send;
+	JButton fileButton;
 
 	public ChatBoxPanel() {
 		super(new BorderLayout());
@@ -76,7 +78,7 @@ public class ChatBoxPanel extends JPanel {
     	            java.awt.Image.SCALE_SMOOTH)));
 		 */
 
-		JButton send = new JButton(new ImageIcon(((new ImageIcon(
+		send = new JButton(new ImageIcon(((new ImageIcon(
 				img).getImage()
 				.getScaledInstance(30, 30,
 						java.awt.Image.SCALE_SMOOTH)))));
@@ -84,7 +86,6 @@ public class ChatBoxPanel extends JPanel {
 		SendListener sendListener = new SendListener(send);
 		send.setActionCommand("Send");
 		send.addActionListener(sendListener);
-		send.setEnabled(false);
 		send.setMaximumSize(new Dimension(50,30));
 
 		// to remote the spacing between the image and button's borders
@@ -94,7 +95,7 @@ public class ChatBoxPanel extends JPanel {
 
 		//send.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		send.setEnabled(true);
+		send.setEnabled(false);
 		// add(send, BorderLayout.SOUTH);
 
 		message.addActionListener(sendListener);
@@ -106,12 +107,12 @@ public class ChatBoxPanel extends JPanel {
 
 		//Create the open button.  We use the image from the JLF
 		//Graphics Repository (but we extracted it from the jar).
-		JButton fileButton = new JButton("Send file");
+		fileButton = new JButton("Send file");
 		FileListener fileListener = new FileListener(fileButton);
 		fileButton.setActionCommand("Send file");
 		fileButton.addActionListener(fileListener);
 		fileButton.setMaximumSize(new Dimension(130,30));
-		fileButton.setEnabled(true);
+		fileButton.setEnabled(false);
 
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
@@ -315,4 +316,16 @@ public class ChatBoxPanel extends JPanel {
 			return false;
 		}
 	}
+	
+	public void setButton(String pseudo) {
+		if (Controller.isConnected(pseudo)) {
+			fileButton.setEnabled(true);
+			send.setEnabled(true);
+		}
+		else {
+			fileButton.setEnabled(false);
+			send.setEnabled(false);
+		}
+	}
+	
 }

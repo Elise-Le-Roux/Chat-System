@@ -1,6 +1,7 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import controller.User;
 public class ListConnectedUsers extends JPanel implements ListSelectionListener {
 
 	//For the list of connected users 
-	private JList<String> list;
+	JList<String> list;
 	private DefaultListModel<String> listModel;
 
 	public ListConnectedUsers(){
@@ -37,6 +38,8 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
         list.setCellRenderer(new IconListCellRenderer());
+
+		//list.setEnabled(false);
         JScrollPane listScrollPane = new JScrollPane(list);
         add(listScrollPane);
         
@@ -44,9 +47,14 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	
 	//For the chatPanel
 	public void valueChanged(ListSelectionEvent evt) { 
-		if( evt.getValueIsAdjusting()) {
+		if( evt.getValueIsAdjusting() & Window.messages != null) {
+			System.out.println("test");
 			Window.messages.setContent((String) list.getSelectedValue());
 			Window.setAdressee((String) list.getSelectedValue());
+			Window.chatBox.setButton((String) list.getSelectedValue());
+		}
+		else {
+			//list.clearSelection();
 		}
 	} 
 	
