@@ -70,8 +70,8 @@ public class Controller {
 		}
 	}
 	
-	static public void change_pseudo_connected_user(String old_pseudo, String new_pseudo) {
-		users.changePseudo(old_pseudo, new_pseudo);
+	static public void change_pseudo_connected_user(String hostAddress, String new_pseudo) {
+		users.changePseudo(hostAddress, new_pseudo);
 		window.refresh_list();
 	}
 	
@@ -84,10 +84,10 @@ public class Controller {
 	}
 	
 	static public boolean change_username(String username) {
-		String old_pseudo = specUser.get_pseudo();
+		String hostAddress = specUser.get_address();
 		boolean result = specUser.changeUsername(username);
 		if(result) {
-			change_pseudo_connected_user(old_pseudo ,username);
+			change_pseudo_connected_user(hostAddress ,username);
 		}
 		window.refresh_list();
 		return result;
