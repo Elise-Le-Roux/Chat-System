@@ -321,10 +321,12 @@ public class ChatBoxPanel extends JPanel {
 		if (Controller.isConnected(pseudo)) {
 			fileButton.setEnabled(true);
 			send.setEnabled(true);
+			message.setEnabled(true);
 		}
 		else {
 			fileButton.setEnabled(false);
 			send.setEnabled(false);
+			message.setEnabled(false);
 		}
 	}
 	

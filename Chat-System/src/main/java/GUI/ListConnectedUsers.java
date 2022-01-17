@@ -58,13 +58,11 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	} 
 	
 	public void refresh() {
-		System.out.println("test");
 		listModel = new DefaultListModel<String>();
 		ArrayList<User> list_user = null;
 		list_user = Controller.get_list_users();
 		for( User u : list_user) {
 			listModel.addElement(u.getPseudo());
-			System.out.println(u.getPseudo());
 		}
 		this.list.setModel(listModel);
 		

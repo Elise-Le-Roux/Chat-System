@@ -112,7 +112,6 @@ public class TcpSocket extends Thread {
 		try {
 			
 			os.writeObject(msg);
-			System.out.println(msg.getSender().getHostAddress() + "     " + Controller.get_address());
 			if(!msg.getReceiver().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
 				DBManager DB = new DBManager();
 				DB.connect();
