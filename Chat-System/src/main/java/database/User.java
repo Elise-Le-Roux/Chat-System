@@ -1,4 +1,4 @@
-package controller;
+package database;
 
 public class User {
 	
@@ -12,6 +12,8 @@ public class User {
 		this.connected = connected;
 	}
 	
+	// GETTERS
+	
 	public String getPseudo () {
 		return this.pseudo;
 	}
@@ -20,15 +22,16 @@ public class User {
 		return this.hostAddress;
 	}
 	
+	public boolean getStatus () {
+		return this.connected;
+	}
+	
+	// SETTERS
 	public void setPseudo (String pseudo) {
 		this.pseudo = pseudo;
 	}
 	
 	public void setStatus(boolean conn) {
 		this.connected = conn;
-	}
-	
-	public boolean getStatus () {
-		return this.connected;
 	}
 }

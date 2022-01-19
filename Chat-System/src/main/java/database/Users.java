@@ -1,7 +1,6 @@
-package controller;
+package database;
 
 import java.util.ArrayList;
-import database.DBManager;
 
 public class Users {
 	
@@ -13,27 +12,26 @@ public class Users {
 	
 	public void addConnectedUser(String pseudo, String hostAddress) {
 		boolean exists = false;
+		User usr = null;
 		
 		if (listUsers != null && !listUsers.isEmpty()) {
 			for (User u : listUsers) {
 				if (u.getHostAddress().equals(hostAddress)) {
 					exists = true;
+					usr = u;
 				}
 			}
 		}
 		
 		if (exists) {
-			this.changeStatus(hostAddress, true);
-			this.changePseudo(hostAddress, pseudo);
+			usr.setStatus(true);
+			usr.setPseudo(pseudo);
 		}
 		else {
 			listUsers.add(new User(pseudo,hostAddress,true));
-			DBManager DB = new DBManager();
-			DB.connect();
-			DB.add_new_user(pseudo, hostAddress);
 		}
 	}
-	
+	/*
 	public void removeUser(String pseudo) { // Pas besoin  ????
 		User usr = null;
 		for (User u : listUsers) {
@@ -42,15 +40,12 @@ public class Users {
 			}
 		}
 		listUsers.remove(usr);
-	}
+	} */
 	
 	public void changePseudo(String hostAddress, String new_pseudo) {
 		for (User u : listUsers) {
 			if (u.getHostAddress().equals(hostAddress)) {
 				u.setPseudo(new_pseudo);
-				DBManager DB = new DBManager();
-				DB.connect();
-				DB.change_pseudo(new_pseudo, hostAddress);
 			}
 		}
 	}
@@ -63,7 +58,7 @@ public class Users {
 		}
 	}
 	
-	public ArrayList<User> getConnectedUsers() {
+	/* public ArrayList<User> getConnectedUsers() {
 		ArrayList<User> connectedUsers = new ArrayList<User>();
 		for(User u : listUsers) {
 			if(u.getStatus()) {
@@ -81,7 +76,7 @@ public class Users {
 			};
 		}
 		return disconnectedUsers;
-	}
+	} */
 	
 	public ArrayList<User> getUsers() {
 		return listUsers;

@@ -5,20 +5,20 @@ import java.net.*;
 import java.util.Enumeration;
 
 import controller.Controller;
-import controller.UDPMessage;
-import controller.UDPMessage.typeMessage;
+import network.UDPMessage.typeMessage;
 
 public class UDPSocket extends Thread{
 	
-	static DatagramSocket dgramSocket; 
-	static int port = 5000;
+	static DatagramSocket dgramSocket;
+	static private int port;
 	byte[] bufferIN = new byte[1500]; // buffer for incoming data
 	static byte[] bufferOUT = new byte[1500]; // buffer for outcoming data
 	DatagramPacket inPacket = new DatagramPacket(bufferIN, bufferIN.length); // DatagramPacket object for the incoming datagram
 	
-	public UDPSocket () {
+	public UDPSocket (int prt) {
 		try {
-			this.dgramSocket = new DatagramSocket(this.port);
+			port = prt;
+			this.dgramSocket = new DatagramSocket(port);
 			start();
 		} catch (SocketException e) {
 			System.out.println("DatagramSocket exception: " + e.getMessage());
@@ -36,24 +36,25 @@ public class UDPSocket extends Thread{
 			    
 			    UDPMessage msg = (UDPMessage)ois.readObject();
 			    
-				String pseudo = msg.getSender();
+				String pseudo = msg.getPseudo();
 				
 				if (msg.getType() == typeMessage.CONNECTED) {
 					Controller.add_connected_user(pseudo,hostAddress);
 				}
 				else if (msg.getType() == typeMessage.DISCONNECTED){
-					Controller.set_disconnected_user(pseudo, hostAddress);
+					Controller.set_disconnected_user(hostAddress);
 				}
-				else if (msg.getType() == typeMessage.GET_CONNECTED_USER){
-					if(Controller.get_pseudo() != null) {
-						Controller.send_connected(pseudo, hostAddress, addr);
+				else if (msg.getType() == typeMessage.GET_CONNECTED_USERS){
+					if(Controller.get_pseudo() != null) { // si j'ai choisi mon pseudo
+						send_connected(Controller.get_pseudo(), addr);
 					}
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHANGED){
-					Controller.change_pseudo_connected_user(hostAddress, msg.getNewPseudo());
+					Controller.change_pseudo_connected_user(hostAddress,pseudo);
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
-					Controller.add_connected_user(pseudo,hostAddress); // a enlever
+					Controller.add_connected_user(pseudo,hostAddress);
+					System.out.println("tesssssssst");
 				}
 				else {
 					System.out.println("Message not recognized");
@@ -98,32 +99,33 @@ public class UDPSocket extends Thread{
 
 	// Broadcast
 	public void get_connected_users() {
-		UDPMessage message = new UDPMessage("", "broadcast", "", typeMessage.GET_CONNECTED_USER); 
+		UDPMessage message = new UDPMessage(typeMessage.GET_CONNECTED_USERS); 
 		send_broadcast(message);
 	}
 
 	// Unicast in response to broadcast get_connected_users
-	public void send_connected(String from, String to, InetAddress addr) { 
-		UDPMessage message = new UDPMessage(from, to, "", typeMessage.CONNECTED); 
+	public void send_connected(String pseudo, InetAddress addr) { 
+		UDPMessage message = new UDPMessage(typeMessage.CONNECTED, pseudo); 
 		send_unicast(message, addr);
 	}
 
 	// Broadcast : Notify all users that we are disconnected
-	public void send_disconnected(String pseudo) {
-		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.DISCONNECTED); 
+	public void send_disconnected() {
+		UDPMessage message = new UDPMessage(typeMessage.DISCONNECTED); 
 		send_broadcast(message);
 	}
 
-	public void send_username_changed(String old_pseudo, String new_pseudo) {
-		UDPMessage message = new UDPMessage(old_pseudo, "broadcast", new_pseudo, typeMessage.PSEUDOCHANGED); 
+	// Broadcast : Notify all users that our pseudo has changed
+	public void send_username_changed(String pseudo) {
+		UDPMessage message = new UDPMessage(typeMessage.PSEUDOCHANGED, pseudo); 
 		send_broadcast(message);
 	}
 	
 	public void send_chosen_pseudo(String pseudo) {
-		UDPMessage message = new UDPMessage(pseudo, "broadcast", "", typeMessage.PSEUDOCHOSEN); 
+		UDPMessage message = new UDPMessage(typeMessage.PSEUDOCHOSEN, pseudo); 
 		send_broadcast(message);
 	}
-
+	
 
 	public static InetAddress getBroadcastAddress() { // exception a la place de retourner null !
 		InetAddress broadcastAddress = null;
@@ -171,7 +173,6 @@ public class UDPSocket extends Thread{
                          return ia;
                      }
                  }
-                
 			}
 
 		} catch (SocketException e) {

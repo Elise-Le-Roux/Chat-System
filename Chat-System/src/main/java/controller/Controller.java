@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import GUI.Window;
 import database.DBManager;
+import database.User;
+import database.Users;
 import network.TcpServerSocket;
 import network.TcpSocket;
 import network.UDPSocket;
@@ -14,15 +16,20 @@ public class Controller {
 	static Window window;
 	static TcpServerSocket tcpSocket;
 	static UDPSocket udpSocket;
-	static specificUser specUser;
 	static Users users;
 	static DBManager DB;
+	
+	static String pseudo;
+	static String ip_address;
+	//boolean connected;
+	
+	// CONSTRUCTOR
 	
 	public Controller(Window w, TcpServerSocket tcpS, UDPSocket udpS, DBManager db) {
 		window = w;
 		tcpSocket = tcpS;
 		udpSocket = udpS;
-		specUser = new specificUser(UDPSocket.getLocalAddr().getHostAddress());
+		ip_address = UDPSocket.getLocalAddr().getHostAddress();
 		DB = db;
 		DB.connect();
 		DB.init();
@@ -33,40 +40,36 @@ public class Controller {
 		udpSocket.get_connected_users();
 	}
 	
-	/************** Methods to control the list of users **************/
+	
+	// GETTERS
+	
+	static public String get_ip_address() {
+		return ip_address;
+	}
+	
+	static public String get_pseudo() {
+		return pseudo;
+	}
+	
+	// METHODS TO UPDATE THE MODEL AND THE VIEW
 	
 	static public void add_connected_user(String pseudo, String address) {
 		users.addConnectedUser(pseudo,address);
 		window.refresh_list();
+		DB.add_new_user(pseudo, address);
 	}
 	
-	static public void remove_connected_user(String pseudo, String address) { // Pas besoin ????
-		if (!address.equals(specUser.get_address())) {
-			users.removeUser(pseudo);
+	static public void set_disconnected_user(String address) {
+		if (!address.equals(ip_address)) {
+			users.changeStatus(address, false);
 			window.refresh_list();
 		}
-		TcpSocket sock = tcpSocket.getConnections().get(address);
-		if(sock != null) {
-			tcpSocket.getConnections().remove(address);
-			sock.kill();
-		}
-	}
-	
-	static public void set_disconnected_user(String pseudo, String address) {
-		if (!address.equals(specUser.get_address())) {
-			users.changeStatus(pseudo, false);
-			window.refresh_list();
-		}
+		
+		// Fermeture de la connexion tcp
 		TcpSocket sock = TcpServerSocket.getConnections().get(address);
 		if(sock != null) {
 			TcpServerSocket.getConnections().remove(address);
 			sock.kill();
-		}
-	}
-
-	static public void send_connected(String pseudo, String address, InetAddress addr) {
-		if (!address.equals(specUser.get_address()) && specUser.get_connected()) { 
-			udpSocket.send_connected(specUser.get_pseudo(), pseudo, addr);
 		}
 	}
 	
@@ -75,43 +78,79 @@ public class Controller {
 		window.refresh_list();
 	}
 	
-	static public boolean choose_username(String username) {
-		return specUser.chooseUsername(username);
+	// METHODS TO 
+	
+	static public boolean chooseUsername(String username) {
+		boolean result = true;
+		ArrayList<User> listUsers = users.getUsers();
+		if (!listUsers.isEmpty()) {
+			for( User u : listUsers) {
+				if(u.getPseudo().equals(username) & !u.getHostAddress().equals(ip_address)) { // ajouter une méthode dans users pour faire la vérif
+					result = false;
+				}
+			}
+		}
+		if (result) {
+			pseudo = username;
+			send_username_chosen(username);
+		}
+		return result;
 	}
+	
+	static public boolean changeUsername(String new_pseudo) {
+		boolean result = true;
+		for( User u : Controller.get_list_users()) {
+			if(u.getPseudo().equals(new_pseudo) & !u.getHostAddress().equals(ip_address)) {
+				result = false;
+			}
+		}
+		if (result) {
+			pseudo = new_pseudo;
+			Controller.send_username_changed(new_pseudo);
+			change_pseudo_connected_user(ip_address ,new_pseudo);
+			window.refresh_list();
+		}
+		return result;
+	}
+	
+	
+	// METHODS TO SEND UDP MESSAGES
 	
 	static public void send_username_chosen(String username) {
 		udpSocket.send_chosen_pseudo(username);
 	}
 	
-	static public boolean change_username(String username) {
-		String hostAddress = specUser.get_address();
-		boolean result = specUser.changeUsername(username);
-		if(result) {
-			change_pseudo_connected_user(hostAddress ,username);
-		}
-		window.refresh_list();
-		return result;
-	}
-	
-	static public void send_username_changed(String old_pseudo, String new_pseudo) {
-		udpSocket.send_username_changed(old_pseudo, new_pseudo);
+	static public void send_username_changed(String pseudo) {
+		udpSocket.send_username_changed(pseudo);
 	}
 	
 	static public void send_disconnected() {
-		udpSocket.send_disconnected(specUser.get_pseudo());
+		udpSocket.send_disconnected();
 	}
 	
 	static public void get_connected_users() {
 		udpSocket.get_connected_users();
 	}
 	
-	static public ArrayList<User> get_list_connected_users() {
+	static public void send_connected(String pseudo, String address, InetAddress addr) {
+		//if (!address.equals(ip_address) && specUser.get_connected()) { 
+			udpSocket.send_connected(pseudo, addr);
+		//}
+	}
+	
+
+	
+	
+	
+	
+	
+	/* static public ArrayList<User> get_list_connected_users() {
 		return users.getConnectedUsers();
 	}
 	
 	static public ArrayList<User> get_list_disconnected_users() {
 		return users.getDisconnectedUsers();
-	}
+	} */
 	
 	static public ArrayList<User> get_list_users() {
 		return users.getUsers();
@@ -122,18 +161,7 @@ public class Controller {
 	}
 	
 	
-	static public String get_address() {
-		return specUser.get_address();
-	}
 	
-	static public String get_pseudo() {
-		if(specUser != null) {
-			return specUser.get_pseudo();
-		}
-		else {
-			return null;
-		}
-	}
 	
 	static public String get_host_address(String pseudo) {
 		String result = null;
@@ -144,14 +172,4 @@ public class Controller {
 		}
 		return result;
 	}
-	
-	static public void set_connected(boolean connected) {
-		specUser.set_connected(connected);
-	}
-	
-	
-	/*static public void set_list_connected_users() {
-		connected_users;
-	}*/
-	
 }

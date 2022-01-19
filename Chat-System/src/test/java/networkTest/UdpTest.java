@@ -2,7 +2,7 @@ package networkTest;
 
 import java.net.InetAddress;
 
-import controller.Users;
+import database.Users;
 import network.UDPSocket;
 
 public class UdpTest {
@@ -13,7 +13,7 @@ public class UdpTest {
 		System.out.println("Broadcast address = " + addr.toString());
 		
 		// Test envoi message broadcast connected/deconnected
-		UDPSocket UserA = new UDPSocket(); // User A
+		UDPSocket UserA = new UDPSocket(4698); // User A
 		
 		Thread.sleep(1000);
 		

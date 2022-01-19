@@ -1,11 +1,11 @@
 package networkTest;
 
 import network.*;
+import network.TCPMessage.TypeNextMessage;
+
 import java.net.*;
 import java.sql.Date;
 
-import controller.TCPMessage;
-import controller.TCPMessage.TypeNextMessage;
 import database.DBManager;
 
 public class TcpTest {

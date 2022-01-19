@@ -6,10 +6,8 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import controller.TCPMessage;
-import controller.User;
-import controller.Users;
-import controller.TCPMessage.TypeNextMessage;
+import network.TCPMessage;
+import network.TCPMessage.TypeNextMessage;
 
 public class DBManager {
 	static String url = "jdbc:sqlite:test.db";
@@ -43,7 +41,7 @@ public class DBManager {
 	
 	public void add_new_user(String pseudo, String address) {
 		try {
-			String query = "INSERT INTO users values (?,?)";
+			String query = "REPLACE INTO users values (?,?)";
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1,pseudo);
 			pstmt.setString(2,address);
@@ -53,7 +51,7 @@ public class DBManager {
 		}
 	}
 	
-	public void change_pseudo(String pseudo, String address) {
+	public void change_pseudo(String pseudo, String address) { // A enlever
 		try {
 			String query = "UPDATE users"
 					+ "	SET pseudo = ?"
@@ -66,8 +64,6 @@ public class DBManager {
 			System.out.println("SQL INSERT exception 3" + e.getMessage());
 		}
 	}
-	
-	
 	
 	public ArrayList<User> select_users() {
 		try {
@@ -139,7 +135,7 @@ public class DBManager {
 		}
 
 	}
-
+	
 	//initialization of the database 
 	public void init(){
 		String query1 = "CREATE TABLE historique ("
@@ -158,7 +154,7 @@ public class DBManager {
 			
 			String query2 = "CREATE TABLE users ("
 					+ "pseudo VARCHAR(100) NOT NULL UNIQUE,"
-					+ "address VARCHAR(100) NOT NULL UNIQUE)";// adresse ip
+					+ "address VARCHAR(100) NOT NULL PRIMARY KEY)";// adresse ip
 			try {
 				Statement stmt2 = conn.createStatement();
 				stmt2.executeUpdate(query2);

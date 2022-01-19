@@ -14,8 +14,6 @@ import java.net.InetAddress;
 import java.sql.Date;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -25,13 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import GUI.WelcomePanel.EnterListener;
-import controller.Users;
 import controller.Controller;
-import controller.TCPMessage;
-import controller.specificUser;
-import controller.TCPMessage.TypeNextMessage;
+import network.TCPMessage;
 import network.TcpServerSocket;
+import network.TCPMessage.TypeNextMessage;
 
 //Chatbox at bottom to send message 
 public class ChatBoxPanel extends JPanel {
@@ -145,13 +140,13 @@ public class ChatBoxPanel extends JPanel {
 				Date date = new Date(System.currentTimeMillis());
 				String to = Controller.get_host_address(Window.getAdressee());
 				if (TcpServerSocket.getConnections().containsKey(to)) {
-					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT));
+					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT));
 				}
 				else {
-					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
+					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
 
 				}
-				if (!InetAddress.getByName(Controller.get_address()).equals(InetAddress.getByName(to))) {
+				if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 					Window.messages.setContent(Window.getAdressee());
 				}
 			} catch (Exception e1) {
@@ -205,12 +200,12 @@ public class ChatBoxPanel extends JPanel {
 			ChangeUsername changed = new ChangeUsername("Enter your new pseudo please. ");
 			String new_pseudo = changed.get_new_username();
 			if(new_pseudo != null && !new_pseudo.equals("")) {
-				boolean pseudo_ok = Controller.change_username(new_pseudo);
+				boolean pseudo_ok = Controller.changeUsername(new_pseudo);
 				while(!pseudo_ok) {
 					changed = new ChangeUsername("This pseudo already exists, please enter a new one.");
 					if(new_pseudo != null && !new_pseudo.equals("")) {
 						new_pseudo = changed.get_new_username();
-						pseudo_ok = Controller.change_username(new_pseudo);
+						pseudo_ok = Controller.changeUsername(new_pseudo);
 					}
 				}
 			}
@@ -269,12 +264,12 @@ public class ChatBoxPanel extends JPanel {
 					Date date = new Date(System.currentTimeMillis());
 					String to = Controller.get_host_address(Window.getAdressee());
 					if (TcpServerSocket.getConnections().containsKey(to)) {
-						TcpServerSocket.getConnections().get(to).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
+						TcpServerSocket.getConnections().get(to).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
 					}
 					else {
-						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
+						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
 					}
-					if (!InetAddress.getByName(Controller.get_address()).equals(InetAddress.getByName(to))) {
+					if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 						Window.messages.setContent(Window.getAdressee());
 					}
 				}

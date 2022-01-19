@@ -1,4 +1,4 @@
-package controller;
+package network;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 public class TCPMessage implements Serializable{
+	
+	// ATTRIBUTES
 	InetAddress from; 
 	InetAddress to;
 	String content;
@@ -21,6 +23,7 @@ public class TCPMessage implements Serializable{
 		this.typeNextMessage = type;
 	}
 	
+	// GETTERS
 	public InetAddress getSender() {
 		return this.from;
 	}
@@ -37,6 +40,7 @@ public class TCPMessage implements Serializable{
 		return this.typeNextMessage;
 	}
 	
+	// METHODS
 	public String afficherMsg() {
 		String from1 = this.getSender().getHostAddress();
 		String to1 = this.getReceiver().getHostAddress();
@@ -47,7 +51,7 @@ public class TCPMessage implements Serializable{
 			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nContent: " + content1 + "\n\n");
 		}
 		else { // Type file
-			if( from1.equals(Controller.get_address()) & !from1.equals(to1)) {
+			if( from1.equals(controller.Controller.get_ip_address()) & !from1.equals(to1)) {
 				return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile sent: " + content1 + "\n\n");
 			}
 			else {

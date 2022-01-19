@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 
 
 import controller.Controller;
-import controller.User;
+import database.User;
 
 public class ListConnectedUsers extends JPanel implements ListSelectionListener {
 
@@ -85,13 +85,13 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
                 Image img = null;
                 if (Controller.isConnected((String)value)) {
                 	try {
-                		img = ImageIO.read(getClass().getResource("/controller/point_vert.png"));
+                		img = ImageIO.read(getClass().getResource("/GUI/green-dot.png"));
                 	} catch (IOException e) {
                 		System.out.println("Icone not found");
                 	}
                 } else {
                 	try {
-                		img = ImageIO.read(getClass().getResource("/controller/point_rouge.png"));
+                		img = ImageIO.read(getClass().getResource("/GUI/red-dot.png"));
                 	} catch (IOException e) {
                 		System.out.println("Icone not found");
                 	}

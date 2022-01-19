@@ -5,10 +5,8 @@ import java.net.*;
 
 import GUI.Window;
 import controller.Controller;
-import controller.TCPMessage;
-import controller.specificUser;
-import controller.TCPMessage.TypeNextMessage;
 import database.DBManager;
+import network.TCPMessage.TypeNextMessage;
 
 public class TcpSocket extends Thread {
 	
@@ -25,7 +23,7 @@ public class TcpSocket extends Thread {
 
     public TcpSocket(Socket socketOfServer) {
     	this.socketOfServer = socketOfServer;
-    	this.exit = false;
+    	exit = false;
     	try {
     		this.os = new ObjectOutputStream(socketOfServer.getOutputStream());
     		this.is = new ObjectInputStream(socketOfServer.getInputStream());
@@ -112,7 +110,7 @@ public class TcpSocket extends Thread {
 		try {
 			
 			os.writeObject(msg);
-			if(!msg.getReceiver().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
+			if(!msg.getReceiver().getHostAddress().equals(Controller.get_ip_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
 				DBManager DB = new DBManager();
 				DB.connect();
 				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), msg.getContent(), msg.getTime(), msg.getTypeNextMessage().toString());
@@ -134,8 +132,8 @@ public class TcpSocket extends Thread {
 		try {
 			
 			os.writeObject(msg);
-			System.out.println(msg.getSender().getHostAddress() + "     " + Controller.get_address());
-			if(!msg.getReceiver().getHostAddress().equals(Controller.get_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
+			System.out.println(msg.getSender().getHostAddress() + "     " + Controller.get_ip_address());
+			if(!msg.getReceiver().getHostAddress().equals(Controller.get_ip_address())) { // prevent from adding 2 times the same message in the database when we send a message to ourselves
 				DBManager DB = new DBManager();
 				DB.connect();
 				DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), path, msg.getTime(), msg.getTypeNextMessage().toString());

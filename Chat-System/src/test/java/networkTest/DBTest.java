@@ -6,8 +6,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import controller.TCPMessage;
 import database.DBManager;
+import network.TCPMessage;
 
 public class DBTest {
 	public static void main(String[] args) {
@@ -16,7 +16,25 @@ public class DBTest {
 		DBManager DB2 = new DBManager();
 		DB2.connect();
 		DB.drop_historique();
+		DB.drop_users();
 		DB.init();
+		DB.select_users();
+		System.out.println("******************************************************");
+		DB.add_new_user("joel", "192.168.0.1");
+		DB.select_users();
+		System.out.println("******************************************************");
+		DB.add_new_user("michel", "192.168.0.1");
+		DB.select_users();
+		System.out.println("******************************************************");
+		DB.add_new_user("blbla", "192.169.0.1");
+		DB.select_users();
+		System.out.println("******************************************************");
+		DB.add_new_user("joel", "192.168.0.1");
+		DB.select_users();
+		System.out.println("******************************************************");
+		DB.add_new_user("mimi", "192.169.0.1");
+		DB.select_users();
+		System.out.println("******************************************************"); 
 		//DB.connect();
 		String hostname1 = "";
 		try {
