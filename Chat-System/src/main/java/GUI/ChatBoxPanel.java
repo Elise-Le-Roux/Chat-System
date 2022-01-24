@@ -31,7 +31,7 @@ import network.TCPMessage.TypeNextMessage;
 //Chatbox at bottom to send message 
 public class ChatBoxPanel extends JPanel {
 
-	private JTextField message;
+	JTextField message;
 	JFileChooser fc;
 	JButton send;
 	JButton fileButton;
@@ -152,6 +152,7 @@ public class ChatBoxPanel extends JPanel {
 			} catch (Exception e1) {
 				System.out.println("Exception actionPerformed SendListener: " + e1.getMessage());
 			} 
+			message.setText("");
 		}
 
 		//Required by DocumentListener.

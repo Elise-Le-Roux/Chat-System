@@ -5,11 +5,13 @@ public class User {
 	String pseudo;
 	String hostAddress;
 	boolean connected;
+	boolean unread_msg;
 	
-	public User (String pseudo, String address, boolean connected) {
+	public User (String pseudo, String address, boolean connected, boolean unread_msg) {
 		this.pseudo = pseudo;
 		this.hostAddress = address;
 		this.connected = connected;
+		this.unread_msg = unread_msg;
 	}
 	
 	// GETTERS
@@ -26,6 +28,10 @@ public class User {
 		return this.connected;
 	}
 	
+	public boolean getUnreadMsg () {
+		return this.unread_msg;
+	}
+	
 	// SETTERS
 	public void setPseudo (String pseudo) {
 		this.pseudo = pseudo;
@@ -33,5 +39,9 @@ public class User {
 	
 	public void setStatus(boolean conn) {
 		this.connected = conn;
+	}
+	
+	public void setUnreadMsg(boolean unread_msg) {
+		this.unread_msg = unread_msg;
 	}
 }

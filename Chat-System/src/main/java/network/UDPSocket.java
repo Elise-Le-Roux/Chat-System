@@ -54,7 +54,6 @@ public class UDPSocket extends Thread{
 				}
 				else if (msg.getType() == typeMessage.PSEUDOCHOSEN){
 					Controller.add_connected_user(pseudo,hostAddress);
-					System.out.println("tesssssssst");
 				}
 				else {
 					System.out.println("Message not recognized");

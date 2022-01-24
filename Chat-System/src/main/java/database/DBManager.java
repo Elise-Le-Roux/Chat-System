@@ -41,10 +41,11 @@ public class DBManager {
 	
 	public void add_new_user(String pseudo, String address) {
 		try {
-			String query = "REPLACE INTO users values (?,?)";
+			String query = "REPLACE INTO users values (?,?,?)";
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setString(1,pseudo);
 			pstmt.setString(2,address);
+			pstmt.setBoolean(3,false);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("SQL INSERT exception 2" + e.getMessage());
@@ -65,6 +66,20 @@ public class DBManager {
 		}
 	}
 	
+	public void change_unread(String address, Boolean unread) { // A enlever
+		try {
+			String query = "UPDATE users"
+					+ "	SET unread = ?"
+					+ "	WHERE address = ?" ;
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setBoolean(1, unread);
+			pstmt.setString(2,address);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQL INSERT exception 3" + e.getMessage());
+		}
+	}
+	
 	public ArrayList<User> select_users() {
 		try {
 			ArrayList<User> users = new ArrayList<User>();
@@ -73,7 +88,7 @@ public class DBManager {
 	        stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while(rs.next()) {
-				users.add(new User(rs.getString(1), rs.getString(2), false));
+				users.add(new User(rs.getString(1), rs.getString(2), false, rs.getBoolean(3)));
 			}
 			return users;
 		} catch (SQLException e) {
@@ -154,7 +169,8 @@ public class DBManager {
 			
 			String query2 = "CREATE TABLE users ("
 					+ "pseudo VARCHAR(100) NOT NULL UNIQUE,"
-					+ "address VARCHAR(100) NOT NULL PRIMARY KEY)";// adresse ip
+					+ "address VARCHAR(100) NOT NULL PRIMARY KEY," // adresse ip
+					+ "unread BOOLEAN)";
 			try {
 				Statement stmt2 = conn.createStatement();
 				stmt2.executeUpdate(query2);

@@ -78,6 +78,18 @@ public class Controller {
 		window.refresh_list();
 	}
 	
+	static public void set_msg_unread(String hostAddress) {
+		DB.change_unread(hostAddress, false);
+		users.changeStatus(hostAddress, false);
+		window.refresh_list();
+	}
+	
+	static public void set_msg_read(String hostAddress) {
+		DB.change_unread(hostAddress, true);
+		users.changeStatus(hostAddress, true);
+		window.refresh_list();
+	}
+	
 	// METHODS TO 
 	
 	static public boolean chooseUsername(String username) {
@@ -160,6 +172,9 @@ public class Controller {
 		return users.isConnected(pseudo);
 	}
 	
+	static public boolean getUnread(String pseudo) {
+		return users.getUnread(pseudo);
+	}
 	
 	
 	

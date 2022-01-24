@@ -28,7 +28,7 @@ public class Users {
 			usr.setPseudo(pseudo);
 		}
 		else {
-			listUsers.add(new User(pseudo,hostAddress,true));
+			listUsers.add(new User(pseudo,hostAddress,true,false));
 		}
 	}
 	/*
@@ -54,6 +54,14 @@ public class Users {
 		for (User u : listUsers) {
 			if (u.getHostAddress().equals(hostAddress)) {
 				u.setStatus(status);
+			}
+		}
+	}
+	
+	public void changeUnread(String hostAddress, boolean unread) {
+		for (User u : listUsers) {
+			if (u.getHostAddress().equals(hostAddress)) {
+				u.setUnreadMsg(unread);
 			}
 		}
 	}
@@ -100,6 +108,16 @@ public class Users {
 		for (User u : listUsers) {
 			if (u.getPseudo().equals(pseudo)) {
 				result = u.getStatus();
+			}
+		}
+		return result;
+	}
+	
+	public boolean getUnread(String pseudo) {
+		boolean result = false;
+		for (User u : listUsers) {
+			if (u.getPseudo().equals(pseudo)) {
+				result = u.getUnreadMsg();
 			}
 		}
 		return result;

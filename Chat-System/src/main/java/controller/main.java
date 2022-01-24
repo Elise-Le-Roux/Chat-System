@@ -10,13 +10,17 @@ import network.TCPMessage.TypeNextMessage;
 public class main {
 
 	public static void main(String[] args) {
+		DBManager DB = new DBManager();
+		/*DB.connect();
+		DB.drop_users();
+		DB.init(); */
 		final Window window = new Window();
 		window.createAndShowGUI();
 		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				window.createAndShowGUI();
 			}
-		}); */
+		}); 
 		DBManager DB = new DBManager();
 		/*DB.connect();
 		DB.drop_users();*/

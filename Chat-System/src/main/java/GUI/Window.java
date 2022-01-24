@@ -5,13 +5,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.*;
+
+import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme;
+
 import controller.Controller;
 
 public class Window extends JPanel {
 
 	//Specify the look and feel to use.  Valid values:
 	//null (use the default), "Metal", "System", "Motif", "GTK+"
-	final static String LOOKANDFEEL = "GTK+";
+	final static String LOOKANDFEEL = "System";
 	public static MessagePanel messages;
 	static JFrame frame;
 	static JPanel welcome;
@@ -20,10 +24,10 @@ public class Window extends JPanel {
 	static ChatBoxPanel chatBox;
 
 	private static void initLookAndFeel() {
-
+		FlatDarkPurpleIJTheme.setup();
 		// Swing allows you to specify which look and feel your program uses--Java,
 		// GTK+, Windows, and so on as shown below.
-		String lookAndFeel = null;
+		/*String lookAndFeel = null;
 
 		if (LOOKANDFEEL != null) {
 			if (LOOKANDFEEL.equals("Metal")) {
@@ -59,7 +63,7 @@ public class Window extends JPanel {
 				System.err.println("Using the default look and feel.");
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 
 	static public void setAdressee(String adressee_1) {

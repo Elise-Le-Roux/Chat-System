@@ -63,6 +63,7 @@ public class TcpSocket extends Thread {
 						fileName = msg.getContent();
 					}
 					Window.messages.setContent(Window.getAdressee()); // a changer
+					Controller.set_msg_unread(msg.getSender().getHostAddress());
 				}
 				else if (msgType.equals(TypeNextMessage.FILE)){
 					int bytes = 0;

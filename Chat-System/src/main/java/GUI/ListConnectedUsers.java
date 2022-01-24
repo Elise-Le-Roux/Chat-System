@@ -48,12 +48,11 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	//For the chatPanel
 	public void valueChanged(ListSelectionEvent evt) { 
 		if( evt.getValueIsAdjusting() & Window.messages != null) {
-			Window.messages.setContent((String) list.getSelectedValue());
-			Window.setAdressee((String) list.getSelectedValue());
-			Window.chatBox.setButton((String) list.getSelectedValue());
-		}
-		else {
-			//list.clearSelection();
+			String pseudo = (String) list.getSelectedValue();
+			Window.messages.setContent(pseudo);
+			Window.setAdressee(pseudo);
+			Window.chatBox.setButton(pseudo);
+			Controller.set_msg_read(Controller.get_host_address(pseudo));
 		}
 	} 
 	
@@ -81,23 +80,49 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
                     value, index, isSelected, cellHasFocus );
   
             if( c instanceof JLabel ) {
-                JLabel label = ( JLabel )c;
-                Image img = null;
-                if (Controller.isConnected((String)value)) {
-                	try {
-                		img = ImageIO.read(getClass().getResource("/GUI/green-dot.png"));
-                	} catch (IOException e) {
-                		System.out.println("Icone not found");
-                	}
-                } else {
-                	try {
-                		img = ImageIO.read(getClass().getResource("/GUI/red-dot.png"));
-                	} catch (IOException e) {
-                		System.out.println("Icone not found");
-                	}
-                }
+            	JLabel label = ( JLabel )c;
+            	Image img = null;
+            	String pseudo = (String) value;
+            	if (Controller.getUnread(pseudo)) {
+            		try {
+    					img = ImageIO.read(getClass().getResource("/GUI/blue-square.png"));
+    				} catch (IOException e) {
+    					System.out.println("Icone not found");
+    				}
+            	} else {
+            		if (Controller.isConnected(pseudo)) {
+            			if (Controller.get_ip_address().equals(Controller.get_host_address(pseudo))) {
+            				try {
+            					img = ImageIO.read(getClass().getResource("/GUI/empty-green-square.png"));
+            				} catch (IOException e) {
+            					System.out.println("Icone not found");
+            				}
+            			}
+            			else {
+            				try {
+            					img = ImageIO.read(getClass().getResource("/GUI/green-square.png"));
+            				} catch (IOException e) {
+            					System.out.println("Icone not found");
+            				}
+            			}
+            		} else {
+            			if (Controller.get_ip_address().equals(Controller.get_host_address(pseudo))) {
+            				try {
+            					img = ImageIO.read(getClass().getResource("/GUI/empty-red-square.png"));
+            				} catch (IOException e) {
+            					System.out.println("Icone not found");
+            				}
+            			} else {
+            				try {
+            					img = ImageIO.read(getClass().getResource("/GUI/red-square.png"));
+            				} catch (IOException e) {
+            					System.out.println("Icone not found");
+            				}
+            			}
+            		}
+            	}
                 ImageIcon ii = new ImageIcon(img);
-                int scale = 30; // 2 times smaller
+                int scale = 45; // 2 times smaller
             	int width = ii.getIconWidth();
             	int newWidth = width / scale;
                 label.setIcon(new ImageIcon(ii.getImage().getScaledInstance(newWidth, -1,
