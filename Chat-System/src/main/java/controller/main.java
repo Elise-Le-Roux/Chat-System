@@ -13,7 +13,7 @@ public class main {
 		DBManager DB = new DBManager();
 		/*DB.connect();
 		DB.drop_users();
-		DB.init(); */
+		DB.init();*/
 		final Window window = new Window();
 		window.createAndShowGUI();
 		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {

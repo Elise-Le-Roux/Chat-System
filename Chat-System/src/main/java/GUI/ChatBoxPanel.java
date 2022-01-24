@@ -1,8 +1,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Insets;
@@ -38,7 +36,7 @@ public class ChatBoxPanel extends JPanel {
 
 	public ChatBoxPanel() {
 		super(new BorderLayout());
-		//setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
 		GroupLayout layout = new GroupLayout(this);
 		this.setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -88,10 +86,7 @@ public class ChatBoxPanel extends JPanel {
 		// to remove the border
 		send.setBorder(null);
 
-		//send.setAlignmentX(Component.LEFT_ALIGNMENT);
-
 		send.setEnabled(false);
-		// add(send, BorderLayout.SOUTH);
 
 		message.addActionListener(sendListener);
 
