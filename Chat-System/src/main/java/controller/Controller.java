@@ -2,6 +2,7 @@ package controller;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 import GUI.Window;
 import database.DBManager;
@@ -19,6 +20,7 @@ public class Controller {
 	static UDPSocket udpSocket;
 	static Users users;
 	static DBManager DB;
+	private static Semaphore mutex = new Semaphore(1);
 	
 	static String pseudo;
 	static String ip_address;
@@ -82,13 +84,13 @@ public class Controller {
 	
 	static public void set_msg_unread(String hostAddress) {
 		users.changeUnread(hostAddress, true);
-		window.refresh_list();
+		//window.refresh_list();
 		DB.change_unread(hostAddress, true);
 	}
 	
 	static public void set_msg_read(String hostAddress) {
 		users.changeUnread(hostAddress, false);
-		window.refresh_list();
+		//window.refresh_list();
 		DB.change_unread(hostAddress, false);
 	}
 	
@@ -123,6 +125,7 @@ public class Controller {
 			Controller.send_username_changed(new_pseudo);
 			change_pseudo_connected_user(ip_address ,new_pseudo);
 			window.refresh_list();
+			Window.chatBox.lockButton();
 		}
 		return result;
 	}
@@ -194,7 +197,7 @@ public class Controller {
 		try {
 			result = users.getHostAddress(pseudo);
 		} catch (Exception e) {
-			System.out.println("Exception controller : pseudo not found ");
+			System.out.println("Exception controller : pseudo not found " + pseudo);
 		}
 		return result;
 	}

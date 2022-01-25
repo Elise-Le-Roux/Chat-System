@@ -22,7 +22,7 @@ public class Window extends JPanel {
 	static JPanel welcome;
 	static String adressee;
 	static ListConnectedUsers list;
-	static ChatBoxPanel chatBox;
+	public static ChatBoxPanel chatBox;
 
 	private static void initLookAndFeel() {
 		FlatDarkPurpleIJTheme.setup();

@@ -45,6 +45,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
         
 	} 
 	
+	
 	//For the chatPanel
 	public void valueChanged(ListSelectionEvent evt) { 
 		if( evt.getValueIsAdjusting() & Window.messages != null) {
@@ -52,6 +53,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 			Window.messages.setContent(pseudo);
 			Window.setAdressee(pseudo);
 			Window.chatBox.setButton(pseudo);
+			System.out.println(pseudo);
 			Controller.set_msg_read(Controller.get_host_address(pseudo));
 		}
 	} 
@@ -85,7 +87,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             	JLabel label = ( JLabel )c;
             	Image img = null;
             	String pseudo = (String) value;
-            	if (Controller.getUnread(pseudo) & !Window.getAdressee().equals(pseudo)) {
+            	if (Controller.getUnread(pseudo) & Window.getAdressee() != null && !Window.getAdressee().equals(pseudo)) { // 
             		try {
     					img = ImageIO.read(getClass().getResource("/GUI/blue-square.png"));
     				} catch (IOException e) {

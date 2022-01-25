@@ -324,4 +324,10 @@ public class ChatBoxPanel extends JPanel {
 		}
 	}
 	
+	public void lockButton() {
+		fileButton.setEnabled(false);
+		send.setEnabled(false);
+		message.setEnabled(false);
+	}
+	
 }
