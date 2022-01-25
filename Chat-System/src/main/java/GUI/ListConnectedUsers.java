@@ -38,7 +38,6 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
         list.setCellRenderer(new IconListCellRenderer());
-
 		//list.setEnabled(false);
         JScrollPane listScrollPane = new JScrollPane(list);
         add(listScrollPane);
@@ -87,7 +86,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             	JLabel label = ( JLabel )c;
             	Image img = null;
             	String pseudo = (String) value;
-            	if (Controller.getUnread(pseudo) & Window.getAdressee() != null && !Window.getAdressee().equals(pseudo)) { // 
+            	if (Controller.getUnread(pseudo) ) { // & Window.getAdressee() != null && !Window.getAdressee().equals(pseudo)
             		try {
     					img = ImageIO.read(getClass().getResource("/GUI/blue-square.png"));
     				} catch (IOException e) {
@@ -104,6 +103,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             			}
             			else {
             				try {
+            					System.out.println("tesssssst");
             					img = ImageIO.read(getClass().getResource("/GUI/green-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");

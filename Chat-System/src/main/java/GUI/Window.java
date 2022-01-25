@@ -120,14 +120,13 @@ public class Window extends JPanel {
 
 	static public void exitProcedure() {
 		Controller.send_disconnected();
+		// Fermer tous les sockets !
 	    frame.dispose();
 	    System.exit(0);
 	}
 
 	// When a valid pseudo is entered the window's view change
 	public static void change_view() {
-
-
 		//list.list.setEnabled(true);
 		frame.remove(welcome);
 		messages = new MessagePanel();
@@ -143,7 +142,7 @@ public class Window extends JPanel {
 		frame.validate();
 	}
 	
-	public void refresh_list() {
+	public static void refresh_list() {
 		list.refresh(); // ajouter if si la liste n'a pas encore été créée 
 	}
 	

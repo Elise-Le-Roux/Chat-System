@@ -84,7 +84,7 @@ public class Controller {
 	
 	static public void set_msg_unread(String hostAddress) {
 		users.changeUnread(hostAddress, true);
-		//window.refresh_list();
+		window.refresh_list();
 		DB.change_unread(hostAddress, true);
 	}
 	
