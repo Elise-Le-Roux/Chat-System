@@ -18,7 +18,7 @@ public class UDPSocket extends Thread{
 	public UDPSocket (int prt) {
 		try {
 			port = prt;
-			this.dgramSocket = new DatagramSocket(port);
+			dgramSocket = new DatagramSocket(port);
 			start();
 		} catch (SocketException e) {
 			System.out.println("DatagramSocket exception: " + e.getMessage());

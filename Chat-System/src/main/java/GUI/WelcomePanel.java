@@ -21,6 +21,8 @@ import controller.Controller;
 
 public class WelcomePanel extends JPanel {
 	
+	private static final long serialVersionUID = -7374567121924707630L;
+	
 	private JTextField pseudo;
     private JLabel error;
 	

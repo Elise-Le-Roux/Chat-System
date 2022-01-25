@@ -2,16 +2,22 @@ package network;
 
 import java.io.IOException;
 import java.net.*;
+import java.sql.Date;
 import java.util.Hashtable;
+
+import controller.Controller;
+import network.TCPMessage.TypeNextMessage;
 
 public class TcpServerSocket extends Thread{
 	
 	ServerSocket listener;
 	static Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // host address <-> socket
-
-	public TcpServerSocket(int port) {
+	static int port;
+	
+	public TcpServerSocket(int socket_port) {
 		try {
-			this.listener = new ServerSocket(port);
+			this.listener = new ServerSocket(socket_port);
+			port = socket_port;
 			start();
 		} catch (IOException e) {
 			System.out.println("Server exception 1: " + e.getMessage());
@@ -47,6 +53,43 @@ public class TcpServerSocket extends Thread{
 			System.out.println("I/O error: " + e.getMessage());
 		}
 		return thread;
+	}
+	
+	static public void send_msg(String hostAddress, String content) {
+		Date date = new Date(System.currentTimeMillis());
+		TCPMessage msg;
+		try {
+			msg = new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(hostAddress), content, date, TypeNextMessage.TEXT);
+			if (getConnections().containsKey(hostAddress)) {
+				TcpServerSocket.getConnections().get(hostAddress).send_msg(msg);
+			}
+			else {
+				TcpServerSocket.connect(hostAddress, port).send_msg(msg);
+
+			}
+		} catch (UnknownHostException e) {
+			System.out.println("exception TcpServerSocket send_msg");
+		}
+		
+	}
+	
+	static public void send_file(String hostAddress, String filename, String path) {
+		Date date = new Date(System.currentTimeMillis());
+		TCPMessage msg;
+		try {
+			msg = new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(hostAddress), filename, date, TypeNextMessage.FILE);
+			if (getConnections().containsKey(hostAddress)) {
+				getConnections().get(hostAddress).sendFile(msg,path);
+			}
+			else {
+				connect(hostAddress, port).sendFile(msg,path);
+			}
+		} catch (UnknownHostException e) {
+			System.out.println("exception TcpServerSocket send_file");
+		} catch (Exception e) {
+			System.out.println("exception TcpServerSocket send_file");
+		}
+		
 	}
 	
 	public static Hashtable<String, TcpSocket> getConnections() {

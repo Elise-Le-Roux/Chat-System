@@ -6,13 +6,14 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
-import com.formdev.flatlaf.intellijthemes.FlatDarkFlatIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme;
 
 import controller.Controller;
 
 public class Window extends JPanel {
 
+	private static final long serialVersionUID = 2087030015107756824L;
+	
 	//Specify the look and feel to use.  Valid values:
 	//null (use the default), "Metal", "System", "Motif", "GTK+"
 	final static String LOOKANDFEEL = "System";

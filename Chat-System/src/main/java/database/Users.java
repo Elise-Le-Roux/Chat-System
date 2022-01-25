@@ -86,6 +86,14 @@ public class Users {
 		return disconnectedUsers;
 	} */
 	
+	public ArrayList<String> getPseudos() {
+		ArrayList<String> pseudos = new ArrayList<String>();
+		for(User u : listUsers) {
+				pseudos.add(u.getPseudo());
+		}
+		return pseudos;
+	}
+	
 	public ArrayList<User> getUsers() {
 		return listUsers;
 	}
@@ -96,6 +104,19 @@ public class Users {
 		for (User u : listUsers) {
 			if (u.getPseudo().equals(pseudo)) {
 				result = u.getHostAddress();
+				exists = true;
+			}
+		}
+		if(!exists) {throw new Exception("Utilisateur non présent dans la liste des utilisateurs connectés");}
+		return result;
+	}
+	
+	public String getHostPseudo(String hostAddress) throws Exception {
+		String result = "";
+		boolean exists = false;
+		for (User u : listUsers) {
+			if (u.getHostAddress().equals(hostAddress)) {
+				result = u.getPseudo();
 				exists = true;
 			}
 		}

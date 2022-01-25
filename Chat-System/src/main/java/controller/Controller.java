@@ -7,6 +7,7 @@ import GUI.Window;
 import database.DBManager;
 import database.User;
 import database.Users;
+import network.TCPMessage;
 import network.TcpServerSocket;
 import network.TcpSocket;
 import network.UDPSocket;
@@ -21,7 +22,7 @@ public class Controller {
 	
 	static String pseudo;
 	static String ip_address;
-	//boolean connected;
+	
 	
 	// CONSTRUCTOR
 	
@@ -64,7 +65,7 @@ public class Controller {
 			users.changeStatus(address, false);
 			window.refresh_list();
 		}
-		
+	
 		// Fermeture de la connexion tcp
 		TcpSocket sock = TcpServerSocket.getConnections().get(address);
 		if(sock != null) {
@@ -76,18 +77,19 @@ public class Controller {
 	static public void change_pseudo_connected_user(String hostAddress, String new_pseudo) {
 		users.changePseudo(hostAddress, new_pseudo);
 		window.refresh_list();
+		DB.change_pseudo(new_pseudo, hostAddress);
 	}
 	
 	static public void set_msg_unread(String hostAddress) {
-		DB.change_unread(hostAddress, false);
-		users.changeStatus(hostAddress, false);
+		users.changeUnread(hostAddress, true);
 		window.refresh_list();
+		DB.change_unread(hostAddress, true);
 	}
 	
 	static public void set_msg_read(String hostAddress) {
-		DB.change_unread(hostAddress, true);
-		users.changeStatus(hostAddress, true);
+		users.changeUnread(hostAddress, false);
 		window.refresh_list();
+		DB.change_unread(hostAddress, false);
 	}
 	
 	// METHODS TO 
@@ -150,22 +152,27 @@ public class Controller {
 		//}
 	}
 	
-
 	
+	// METHODS TO SEND TCP MESSAGES
 	
-	
-	
-	
-	/* static public ArrayList<User> get_list_connected_users() {
-		return users.getConnectedUsers();
+	static public void send_msg(String hostAddress, String content) {
+		TcpServerSocket.send_msg(hostAddress,content);
 	}
 	
-	static public ArrayList<User> get_list_disconnected_users() {
-		return users.getDisconnectedUsers();
-	} */
+	static public void send_file(String hostAddress, String filename, String path) {
+		TcpServerSocket.send_file(hostAddress, filename, path);
+	}
+	
+	
+	
+	
 	
 	static public ArrayList<User> get_list_users() {
 		return users.getUsers();
+	}
+	
+	static public ArrayList<String> get_list_pseudos() {
+		return users.getPseudos();
 	}
 	
 	static public boolean isConnected(String pseudo) {
@@ -176,7 +183,11 @@ public class Controller {
 		return users.getUnread(pseudo);
 	}
 	
-	
+	static public ArrayList<TCPMessage> getConv(String hostAddress) {
+		ArrayList<TCPMessage> list_msg = null;
+		list_msg = DB.select_conv(get_ip_address(),hostAddress); 
+		return list_msg;
+	}
 	
 	static public String get_host_address(String pseudo) {
 		String result = null;
@@ -184,6 +195,16 @@ public class Controller {
 			result = users.getHostAddress(pseudo);
 		} catch (Exception e) {
 			System.out.println("Exception controller : pseudo not found ");
+		}
+		return result;
+	}
+	
+	static public String get_user_pseudo(String hostAddress) {
+		String result = null;
+		try {
+			result = users.getHostPseudo(hostAddress);
+		} catch (Exception e) {
+			System.out.println("Exception controller : hostaddress not found ");
 		}
 		return result;
 	}

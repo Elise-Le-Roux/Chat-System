@@ -8,11 +8,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import controller.Controller;
-import database.DBManager;
 import network.TCPMessage;
 
 //Messagebox to display the history messages with current user 
 public class MessagePanel extends JPanel {
+	
+	private static final long serialVersionUID = 7880084217471745877L;
 	
 	private JTextArea textArea;
 	
@@ -28,10 +29,7 @@ public class MessagePanel extends JPanel {
 	}
 
 	public void setContent(String pseudo) {
-		DBManager DB = new DBManager();
-		DB.connect();
-		ArrayList<TCPMessage> list_msg = null;
-		list_msg = DB.select_conv(Controller.get_ip_address(),Controller.get_host_address(pseudo)); 
+		ArrayList<TCPMessage> list_msg = Controller.getConv(Controller.get_host_address(pseudo));
 		textArea.selectAll();
 		textArea.replaceSelection("");
 		for(TCPMessage msg : list_msg) {

@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.IOException;
@@ -14,10 +13,11 @@ import javax.swing.event.ListSelectionListener;
 
 
 import controller.Controller;
-import database.User;
 
 public class ListConnectedUsers extends JPanel implements ListSelectionListener {
 
+	private static final long serialVersionUID = 1795695440936637831L;
+	
 	//For the list of connected users 
 	JList<String> list;
 	private DefaultListModel<String> listModel;
@@ -58,16 +58,18 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	
 	public void refresh() {
 		listModel = new DefaultListModel<String>();
-		ArrayList<User> list_user = null;
-		list_user = Controller.get_list_users();
-		for( User u : list_user) {
-			listModel.addElement(u.getPseudo());
+		ArrayList<String> list_user = null;
+		list_user = Controller.get_list_pseudos();
+		for( String pseudo : list_user) {
+			listModel.addElement(pseudo);
 		}
 		this.list.setModel(listModel);
 		
 	}
 	
 	private class IconListCellRenderer extends DefaultListCellRenderer {
+
+		private static final long serialVersionUID = 4387387892267088870L;
 
 		public IconListCellRenderer() {
             super();
@@ -83,7 +85,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             	JLabel label = ( JLabel )c;
             	Image img = null;
             	String pseudo = (String) value;
-            	if (Controller.getUnread(pseudo)) {
+            	if (Controller.getUnread(pseudo) & !Window.getAdressee().equals(pseudo)) {
             		try {
     					img = ImageIO.read(getClass().getResource("/GUI/blue-square.png"));
     				} catch (IOException e) {

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.sql.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -22,17 +21,17 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import controller.Controller;
-import network.TCPMessage;
-import network.TcpServerSocket;
-import network.TCPMessage.TypeNextMessage;
 
-//Chatbox at bottom to send message 
+//Chatbox at the bottom to send messages
 public class ChatBoxPanel extends JPanel {
 
+	private static final long serialVersionUID = 7937661154453022047L;
+	
 	JTextField message;
 	JFileChooser fc;
 	JButton send;
 	JButton fileButton;
+	JButton changeUsername;
 
 	public ChatBoxPanel() {
 		super(new BorderLayout());
@@ -43,9 +42,9 @@ public class ChatBoxPanel extends JPanel {
 		layout.setAutoCreateContainerGaps(true);
 
 		// Change Username button
-		JButton changeUsername = new JButton("Change username");
-		ChangeUsernameListener usernameListener = new ChangeUsernameListener(changeUsername);
+		changeUsername = new JButton("Change username");
 		changeUsername.setActionCommand("Change username");
+		ChangeUsernameListener usernameListener = new ChangeUsernameListener(changeUsername);
 		changeUsername.addActionListener(usernameListener);
 		changeUsername.setMaximumSize(new Dimension(130,30));
 		changeUsername.setEnabled(true);
@@ -89,7 +88,7 @@ public class ChatBoxPanel extends JPanel {
 		send.setEnabled(false);
 
 		message.addActionListener(sendListener);
-
+		message.setEnabled(false);
 
 		// send files button
 		//Create a file chooser
@@ -98,12 +97,13 @@ public class ChatBoxPanel extends JPanel {
 		//Create the open button.  We use the image from the JLF
 		//Graphics Repository (but we extracted it from the jar).
 		fileButton = new JButton("Send file");
-		FileListener fileListener = new FileListener(fileButton);
 		fileButton.setActionCommand("Send file");
+		FileListener fileListener = new FileListener(fileButton);
 		fileButton.addActionListener(fileListener);
 		fileButton.setMaximumSize(new Dimension(130,30));
 		fileButton.setEnabled(false);
 
+		//Organize the layout of the buttons and the text field inside the panel
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
 				.addComponent(changeUsername)
@@ -132,15 +132,16 @@ public class ChatBoxPanel extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			try {
-				Date date = new Date(System.currentTimeMillis());
 				String to = Controller.get_host_address(Window.getAdressee());
+				Controller.send_msg(to, message.getText());
+				/*Date date = new Date(System.currentTimeMillis());
 				if (TcpServerSocket.getConnections().containsKey(to)) {
 					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT));
 				}
 				else {
 					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
 
-				}
+				} */
 				if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 					Window.messages.setContent(Window.getAdressee());
 				}
@@ -256,15 +257,17 @@ public class ChatBoxPanel extends JPanel {
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
 					System.out.println(file.getAbsolutePath());
-
-					Date date = new Date(System.currentTimeMillis());
 					String to = Controller.get_host_address(Window.getAdressee());
+					Controller.send_file(to, file.getAbsolutePath(), file.getName());
+
+					/*Date date = new Date(System.currentTimeMillis());
 					if (TcpServerSocket.getConnections().containsKey(to)) {
 						TcpServerSocket.getConnections().get(to).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
 					}
 					else {
 						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
-					}
+					} */
+					
 					if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 						Window.messages.setContent(Window.getAdressee());
 					}

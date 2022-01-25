@@ -5,7 +5,11 @@ import java.net.InetAddress;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
+import controller.Controller;
+
 public class TCPMessage implements Serializable{
+	
+	private static final long serialVersionUID = 4120062234428174237L;
 	
 	// ATTRIBUTES
 	InetAddress from; 
@@ -42,20 +46,22 @@ public class TCPMessage implements Serializable{
 	
 	// METHODS
 	public String afficherMsg() {
+		String from = Controller.get_user_pseudo(this.getSender().getHostAddress());
+		String to = Controller.get_user_pseudo(this.getReceiver().getHostAddress());
 		String from1 = this.getSender().getHostAddress();
 		String to1 = this.getReceiver().getHostAddress();
 		String content1 = this.getContent();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		String time1 = formatter.format(this.getTime());
 		if(this.getTypeNextMessage().equals(TypeNextMessage.TEXT)) {
-			return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nContent: " + content1 + "\n\n");
+			return ("From: " + from + ", To: " + to + ", Time: " + time1 + "\nContent: " + content1 + "\n\n");
 		}
 		else { // Type file
 			if( from1.equals(controller.Controller.get_ip_address()) & !from1.equals(to1)) {
-				return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile sent: " + content1 + "\n\n");
+				return ("From: " + from + ", To: " + to + ", Time: " + time1 + "\nFile sent: " + content1 + "\n\n");
 			}
 			else {
-				return ("From: " + from1 + ", To: " + to1 + ", Time: " + time1 + "\nFile saved at: " + content1 + "\n\n");
+				return ("From: " + from + ", To: " + to + ", Time: " + time1 + "\nFile saved at: " + content1 + "\n\n");
 			}
 		}
 	}
