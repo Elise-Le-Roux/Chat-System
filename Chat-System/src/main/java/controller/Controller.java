@@ -211,4 +211,10 @@ public class Controller {
 		}
 		return result;
 	}
+	
+	static public void exit_procedure() {
+		send_disconnected();
+		TcpServerSocket.close();
+		udpSocket.close();
+	}
 }

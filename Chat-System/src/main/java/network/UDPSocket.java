@@ -179,4 +179,8 @@ public class UDPSocket extends Thread{
 		}
 		return localAddress;
 	}
+	
+	public void close() {
+		dgramSocket.close();
+	}
 }

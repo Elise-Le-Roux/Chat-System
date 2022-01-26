@@ -3,6 +3,7 @@ package network;
 import java.io.IOException;
 import java.net.*;
 import java.sql.Date;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import controller.Controller;
@@ -10,13 +11,13 @@ import network.TCPMessage.TypeNextMessage;
 
 public class TcpServerSocket extends Thread{
 	
-	ServerSocket listener;
+	static ServerSocket listener;
 	static Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // host address <-> socket
 	static int port;
 	
 	public TcpServerSocket(int socket_port) {
 		try {
-			this.listener = new ServerSocket(socket_port);
+			listener = new ServerSocket(socket_port);
 			port = socket_port;
 			start();
 		} catch (IOException e) {
@@ -96,6 +97,20 @@ public class TcpServerSocket extends Thread{
 		return connections;
 	}
 	
+	public static void close() {
+		Enumeration<TcpSocket> e = connections.elements();
+		TcpSocket sock = null;
+		while (e.hasMoreElements()) {
+			sock = e.nextElement();
+			sock.kill();
+		}
+		try {
+			listener.close();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 }
 
 

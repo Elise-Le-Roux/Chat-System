@@ -119,8 +119,7 @@ public class Window extends JPanel {
 	}
 
 	static public void exitProcedure() {
-		Controller.send_disconnected();
-		// Fermer tous les sockets !
+		Controller.exit_procedure();
 	    frame.dispose();
 	    System.exit(0);
 	}
