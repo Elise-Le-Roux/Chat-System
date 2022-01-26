@@ -15,6 +15,9 @@ public class TcpServerSocket extends Thread{
 	static Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // host address <-> socket
 	static int port;
 	
+	// to stop the thread
+	static volatile boolean exit = false;
+	
 	public TcpServerSocket(int socket_port) {
 		try {
 			listener = new ServerSocket(socket_port);
@@ -26,7 +29,7 @@ public class TcpServerSocket extends Thread{
 	}
 
 	public void run() {
-		while (true) {
+		while (!exit) {
 			// Accept client connection requests
 			// Get new Socket and new thread for the rest of the connection.
 			Socket socketOfServer;
@@ -39,7 +42,12 @@ public class TcpServerSocket extends Thread{
 			}
 		}
 	}
-	
+
+	// for stopping the thread
+	public void kill() {
+		exit = true;
+	}
+
 	// Demand of connection to a specific host (and on a specific port)
 	static public TcpSocket connect(String hostAddress, int port) {
 		Socket clientSocket;

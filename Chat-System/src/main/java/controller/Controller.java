@@ -214,7 +214,9 @@ public class Controller {
 	
 	static public void exit_procedure() {
 		send_disconnected();
+		tcpSocket.kill();
 		TcpServerSocket.close();
+		udpSocket.kill();
 		udpSocket.close();
 	}
 }

@@ -14,7 +14,10 @@ public class UDPSocket extends Thread{
 	byte[] bufferIN = new byte[1500]; // buffer for incoming data
 	static byte[] bufferOUT = new byte[1500]; // buffer for outcoming data
 	DatagramPacket inPacket = new DatagramPacket(bufferIN, bufferIN.length); // DatagramPacket object for the incoming datagram
-	
+
+	// to stop the thread
+	static volatile boolean exit = false;
+
 	public UDPSocket (int prt) {
 		try {
 			port = prt;
@@ -24,9 +27,14 @@ public class UDPSocket extends Thread{
 			System.out.println("DatagramSocket exception: " + e.getMessage());
 		}
 	}
-	
+
+	// for stopping the thread
+	public void kill() {
+		exit = true;
+	}
+
 	public void run() {
-		while (true) {
+		while (!exit) {
 			try {
 				dgramSocket.receive(inPacket);
 				String hostAddress = inPacket.getAddress().getHostAddress();
