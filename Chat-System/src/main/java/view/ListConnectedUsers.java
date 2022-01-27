@@ -88,7 +88,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             	String pseudo = (String) value;
             	if (Controller.getUnread(pseudo) ) { // & Window.getAdressee() != null && !Window.getAdressee().equals(pseudo)
             		try {
-    					img = ImageIO.read(getClass().getResource("/GUI/blue-square.png"));
+    					img = ImageIO.read(getClass().getResource("/view/blue-square.png"));
     				} catch (IOException e) {
     					System.out.println("Icone not found");
     				}
@@ -96,7 +96,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             		if (Controller.isConnected(pseudo)) {
             			if (Controller.get_ip_address().equals(Controller.get_host_address(pseudo))) {
             				try {
-            					img = ImageIO.read(getClass().getResource("/GUI/empty-green-square.png"));
+            					img = ImageIO.read(getClass().getResource("/view/empty-green-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");
             				}
@@ -104,7 +104,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             			else {
             				try {
             					System.out.println("tesssssst");
-            					img = ImageIO.read(getClass().getResource("/GUI/green-square.png"));
+            					img = ImageIO.read(getClass().getResource("/view/green-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");
             				}
@@ -112,13 +112,13 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             		} else {
             			if (Controller.get_ip_address().equals(Controller.get_host_address(pseudo))) {
             				try {
-            					img = ImageIO.read(getClass().getResource("/GUI/empty-red-square.png"));
+            					img = ImageIO.read(getClass().getResource("/view/empty-red-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");
             				}
             			} else {
             				try {
-            					img = ImageIO.read(getClass().getResource("/GUI/red-square.png"));
+            					img = ImageIO.read(getClass().getResource("/view/red-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");
             				}
