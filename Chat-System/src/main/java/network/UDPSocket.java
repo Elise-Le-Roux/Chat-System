@@ -73,6 +73,7 @@ public class UDPSocket extends Thread{
 				System.out.println("Message exception: " + e.getMessage());
 			}
 		}
+		dgramSocket.close();
 	}
 
 	
@@ -186,9 +187,5 @@ public class UDPSocket extends Thread{
 			System.out.println("getLocalAddr exception: " + e.getMessage());
 		}
 		return localAddress;
-	}
-	
-	public void close() {
-		dgramSocket.close();
 	}
 }

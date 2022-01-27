@@ -41,6 +41,7 @@ public class TcpServerSocket extends Thread{
 				System.out.println("Server exception 2: " + e.getMessage());
 			}
 		}
+		close();
 	}
 
 	// for stopping the thread

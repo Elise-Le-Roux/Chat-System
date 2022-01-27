@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 public class Users {
 	
@@ -10,7 +11,7 @@ public class Users {
 		this.listUsers = users;
 	}
 	
-	public void addConnectedUser(String pseudo, String hostAddress) {
+	public synchronized void addConnectedUser(String pseudo, String hostAddress) {
 		boolean exists = false;
 		User usr = null;
 		
@@ -42,7 +43,7 @@ public class Users {
 		listUsers.remove(usr);
 	} */
 	
-	public void changePseudo(String hostAddress, String new_pseudo) {
+	public synchronized void changePseudo(String hostAddress, String new_pseudo) {
 		for (User u : listUsers) {
 			if (u.getHostAddress().equals(hostAddress)) {
 				u.setPseudo(new_pseudo);
@@ -50,7 +51,7 @@ public class Users {
 		}
 	}
 	
-	public void changeStatus(String hostAddress, boolean status) {
+	public synchronized void changeStatus(String hostAddress, boolean status) {
 		for (User u : listUsers) {
 			if (u.getHostAddress().equals(hostAddress)) {
 				u.setStatus(status);
@@ -58,7 +59,7 @@ public class Users {
 		}
 	}
 	
-	public void changeUnread(String hostAddress, boolean unread) {
+	public synchronized void changeUnread(String hostAddress, boolean unread) {
 		for (User u : listUsers) {
 			if (u.getHostAddress().equals(hostAddress)) {
 				u.setUnreadMsg(unread);
@@ -86,7 +87,7 @@ public class Users {
 		return disconnectedUsers;
 	} */
 	
-	public ArrayList<String> getPseudos() {
+	public synchronized ArrayList<String> getPseudos() {
 		ArrayList<String> pseudos = new ArrayList<String>();
 		for(User u : listUsers) {
 				pseudos.add(u.getPseudo());
@@ -94,11 +95,11 @@ public class Users {
 		return pseudos;
 	}
 	
-	public ArrayList<User> getUsers() {
+	public synchronized ArrayList<User> getUsers() {
 		return listUsers;
 	}
 	
-	public String getHostAddress(String pseudo) throws Exception {
+	public synchronized String getHostAddress(String pseudo) throws Exception {
 		String result = "";
 		boolean exists = false;
 		for (User u : listUsers) {
@@ -111,7 +112,7 @@ public class Users {
 		return result;
 	}
 	
-	public String getHostPseudo(String hostAddress) throws Exception {
+	public synchronized String getHostPseudo(String hostAddress) throws Exception {
 		String result = "";
 		boolean exists = false;
 		for (User u : listUsers) {
@@ -124,7 +125,7 @@ public class Users {
 		return result;
 	}
 	
-	public boolean isConnected(String pseudo) {
+	public synchronized boolean isConnected(String pseudo) {
 		boolean result = false;
 		for (User u : listUsers) {
 			if (u.getPseudo().equals(pseudo)) {
@@ -134,7 +135,7 @@ public class Users {
 		return result;
 	}
 	
-	public boolean getUnread(String pseudo) {
+	public synchronized boolean getUnread(String pseudo) {
 		boolean result = false;
 		for (User u : listUsers) {
 			if (u.getPseudo().equals(pseudo)) {

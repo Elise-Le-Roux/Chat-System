@@ -56,7 +56,7 @@ public class ChatBoxPanel extends JPanel {
 		// Send button
 		Image img = null;
 		try {
-			img = ImageIO.read(getClass().getResource("/GUI/icon.png"));
+			img = ImageIO.read(getClass().getResource("/view/icon.png"));
 		} catch (IOException e) {
 			System.out.println("Icone not found");
 		}

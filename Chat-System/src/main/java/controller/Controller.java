@@ -20,7 +20,6 @@ public class Controller {
 	static UDPSocket udpSocket;
 	static Users users;
 	static DBManager DB;
-	private static Semaphore mutex = new Semaphore(1);
 	
 	static String pseudo;
 	static String ip_address;
@@ -215,8 +214,6 @@ public class Controller {
 	static public void exit_procedure() {
 		send_disconnected();
 		tcpSocket.kill();
-		TcpServerSocket.close();
 		udpSocket.kill();
-		udpSocket.close();
 	}
 }
