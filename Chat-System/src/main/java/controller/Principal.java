@@ -1,9 +1,9 @@
 package controller;
 
-import GUI.Window;
-import database.DBManager;
+import model.DBManager;
 import network.TcpServerSocket;
 import network.UDPSocket;
+import view.Window;
 
 public class Principal {
 

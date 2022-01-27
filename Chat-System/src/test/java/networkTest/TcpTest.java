@@ -6,7 +6,7 @@ import network.TCPMessage.TypeNextMessage;
 import java.net.*;
 import java.sql.Date;
 
-import database.DBManager;
+import model.DBManager;
 
 public class TcpTest {
 

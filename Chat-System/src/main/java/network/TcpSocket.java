@@ -3,10 +3,10 @@ package network;
 import java.io.*;
 import java.net.*;
 
-import GUI.Window;
 import controller.Controller;
-import database.DBManager;
+import model.DBManager;
 import network.TCPMessage.TypeNextMessage;
+import view.Window;
 
 public class TcpSocket extends Thread {
 	

@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import database.DBManager;
+import model.DBManager;
 import network.TCPMessage;
 
 public class DBTest {

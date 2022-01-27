@@ -4,14 +4,14 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
-import GUI.Window;
-import database.DBManager;
-import database.User;
-import database.Users;
+import model.DBManager;
+import model.User;
+import model.Users;
 import network.TCPMessage;
 import network.TcpServerSocket;
 import network.TcpSocket;
 import network.UDPSocket;
+import view.Window;
 
 public class Controller {
 	
