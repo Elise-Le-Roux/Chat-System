@@ -23,8 +23,8 @@ public class TcpTest {
 			InetAddress addressAB = InetAddress.getLocalHost();
 			UserA.connect(hostnameAB, 6000); // Demand of connection from User A to User B
 			Thread.sleep(1000);
-			TcpSocket socketA = UserA.getConnections().get(hostnameAB); 
-			TcpSocket socketB = UserB.getConnections().get("localhost");
+			TcpSocket socketA = TcpServerSocket.getConnections().get(hostnameAB); 
+			TcpSocket socketB = TcpServerSocket.getConnections().get("localhost");
 			System.out.println("Connections A = " + UserA.getConnections());
 			System.out.println("Connections B = " + UserB.getConnections());
 			System.out.println("Hostname = " + hostnameAB);
@@ -33,6 +33,7 @@ public class TcpTest {
 			socketB.send_msg(new TCPMessage(addressAB,addressAB,"helloword",date, TypeNextMessage.TEXT));
 			System.out.println("\n");
 			DBManager.afficher_BDD();
+			
 			
 		} catch (UnknownHostException e) {
 			System.out.println("Hostname exception: " + e.getMessage());

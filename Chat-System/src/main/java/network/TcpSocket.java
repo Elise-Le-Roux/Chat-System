@@ -62,7 +62,7 @@ public class TcpSocket extends Thread {
 						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), path, msg.getTime(), "FILE");
 						fileName = msg.getContent();
 					}
-					Window.messages.setContent(Window.getAdressee()); // a changer
+					//Window.messages.setContent(Window.getAdressee()); // a changer
 					Controller.set_msg_unread(msg.getSender().getHostAddress());
 				}
 				else if (msgType.equals(TypeNextMessage.FILE)){

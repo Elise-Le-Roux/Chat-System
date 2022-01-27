@@ -52,7 +52,6 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 			Window.messages.setContent(pseudo);
 			Window.setAdressee(pseudo);
 			Window.chatBox.setButton(pseudo);
-			System.out.println(pseudo);
 			Controller.set_msg_read(Controller.get_host_address(pseudo));
 		}
 	} 
@@ -103,7 +102,6 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             			}
             			else {
             				try {
-            					System.out.println("tesssssst");
             					img = ImageIO.read(getClass().getResource("/view/green-square.png"));
             				} catch (IOException e) {
             					System.out.println("Icone not found");
@@ -126,7 +124,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             		}
             	}
                 ImageIcon ii = new ImageIcon(img);
-                int scale = 45; // 2 times smaller
+                int scale = 45; // 45 times smaller
             	int width = ii.getIconWidth();
             	int newWidth = width / scale;
                 label.setIcon(new ImageIcon(ii.getImage().getScaledInstance(newWidth, -1,

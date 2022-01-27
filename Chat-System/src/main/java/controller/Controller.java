@@ -93,14 +93,14 @@ public class Controller {
 		DB.change_unread(hostAddress, false);
 	}
 	
-	// METHODS TO 
+	// METHODS TO CHOOSE/CHANGE THE USERNAME
 	
 	static public boolean chooseUsername(String username) {
 		boolean result = true;
 		ArrayList<User> listUsers = users.getUsers();
 		if (!listUsers.isEmpty()) {
 			for( User u : listUsers) {
-				if(u.getPseudo().equals(username) & !u.getHostAddress().equals(ip_address)) { // ajouter une méthode dans users pour faire la vérif
+				if(u.getPseudo().equals(username) & !u.getHostAddress().equals(ip_address)) { 
 					result = false;
 				}
 			}
@@ -167,7 +167,7 @@ public class Controller {
 	
 	
 	
-	
+	// GETTERS OF THE LIST OF USERS
 	
 	static public ArrayList<User> get_list_users() {
 		return users.getUsers();
@@ -183,12 +183,6 @@ public class Controller {
 	
 	static public boolean getUnread(String pseudo) {
 		return users.getUnread(pseudo);
-	}
-	
-	static public ArrayList<TCPMessage> getConv(String hostAddress) {
-		ArrayList<TCPMessage> list_msg = null;
-		list_msg = DB.select_conv(get_ip_address(),hostAddress); 
-		return list_msg;
 	}
 	
 	static public String get_host_address(String pseudo) {
@@ -210,6 +204,18 @@ public class Controller {
 		}
 		return result;
 	}
+	
+	
+	// GETTERS OF THE DATABASE
+	
+	static public ArrayList<TCPMessage> getConv(String hostAddress) {
+		ArrayList<TCPMessage> list_msg = null;
+		list_msg = DB.select_conv(get_ip_address(),hostAddress); 
+		return list_msg;
+	}
+	
+	
+	// EXIT PROCEDURE
 	
 	static public void exit_procedure() {
 		send_disconnected();
