@@ -9,6 +9,10 @@ public class Principal {
 
 	public static void main(String[] args) {
 		DBManager DB = new DBManager();
+		DB.connect();
+		DB.drop_historique();
+		DB.drop_users();
+		DB.init();
 		final Window window = new Window();
 		Window.createAndShowGUI();
 		/*javax.swing.SwingUtilities.invokeLater(new Runnable() {
