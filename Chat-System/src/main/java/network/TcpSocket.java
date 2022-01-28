@@ -6,7 +6,6 @@ import java.net.*;
 import controller.Controller;
 import model.DBManager;
 import network.TCPMessage.TypeNextMessage;
-import view.Window;
 
 public class TcpSocket extends Thread {
 	
