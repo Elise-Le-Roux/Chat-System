@@ -1,1 +1,14 @@
 /.metadata/
+
+# Class Files #
+*.class
+
+# Maven #
+target/
+
+# Eclipse #
+.settings/
+.project
+.classpath
+
+test.db
