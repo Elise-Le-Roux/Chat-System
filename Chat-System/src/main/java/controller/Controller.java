@@ -35,11 +35,11 @@ public class Controller {
 		DB.connect();
 		DB.init();
 		users = new Users(DB.select_users()); // the attributes "connected" are set to false
+		Window.createAndShowGUI();
 		if(DB.select_users() != null) {
 			Window.refresh_list();
 		}
 		udpSocket.get_connected_users();
-		Window.createAndShowGUI();
 	}
 
 
