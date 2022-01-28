@@ -61,14 +61,6 @@ public class ChatBoxPanel extends JPanel {
 			System.out.println("Icone not found");
 		}
 
-		//JButton send = new JButton();
-		/*	ImageIcon ii = new ImageIcon(img);
-    	int scale = 5; // 2 times smaller
-    	int width = ii.getIconWidth();
-    	int newWidth = width / scale;
-    	send.setIcon(new ImageIcon(ii.getImage().getScaledInstance(newWidth, -1,
-    	            java.awt.Image.SCALE_SMOOTH)));
-		 */
 
 		send = new JButton(new ImageIcon(((new ImageIcon(
 				img).getImage()
@@ -94,8 +86,7 @@ public class ChatBoxPanel extends JPanel {
 		//Create a file chooser
 		fc = new JFileChooser();
 
-		//Create the open button.  We use the image from the JLF
-		//Graphics Repository (but we extracted it from the jar).
+		//Create the open button.
 		fileButton = new JButton("Send file");
 		fileButton.setActionCommand("Send file");
 		FileListener fileListener = new FileListener(fileButton);
@@ -121,7 +112,7 @@ public class ChatBoxPanel extends JPanel {
 
 	}
 
-	//This listener is shared by the text field and the enter button.
+	//This listener is shared by the text field and the send button.
 	class SendListener implements ActionListener, DocumentListener {
 		private boolean alreadyEnabled = false;
 		private JButton sendButton;
@@ -134,14 +125,6 @@ public class ChatBoxPanel extends JPanel {
 			try {
 				String to = Controller.get_host_address(Window.getAdressee());
 				Controller.send_msg(to, message.getText());
-				/*Date date = new Date(System.currentTimeMillis());
-				if (TcpServerSocket.getConnections().containsKey(to)) {
-					TcpServerSocket.getConnections().get(to).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT));
-				}
-				else {
-					TcpServerSocket.connect(to, 3000).send_msg(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), message.getText(), date, TypeNextMessage.TEXT)); //Port
-
-				} */
 				if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 					Window.messages.setContent(Window.getAdressee());
 				}
@@ -184,7 +167,7 @@ public class ChatBoxPanel extends JPanel {
 		}
 	}
 
-	//This listener is shared by the text field and the enter button.
+	//Listener for the change username button
 	class ChangeUsernameListener implements ActionListener, DocumentListener {
 		private boolean alreadyEnabled = false;
 		private JButton changeUsernameButton;
@@ -241,7 +224,7 @@ public class ChatBoxPanel extends JPanel {
 		}
 	}
 
-	//This listener is shared by the text field and the enter button.
+	//This listener for the send file button
 	class FileListener implements ActionListener, DocumentListener {
 		private boolean alreadyEnabled = false;
 		private JButton fileButton;
@@ -256,18 +239,8 @@ public class ChatBoxPanel extends JPanel {
 
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fc.getSelectedFile();
-					System.out.println(file.getAbsolutePath());
 					String to = Controller.get_host_address(Window.getAdressee());
-					Controller.send_file(to, file.getAbsolutePath(), file.getName());
-
-					/*Date date = new Date(System.currentTimeMillis());
-					if (TcpServerSocket.getConnections().containsKey(to)) {
-						TcpServerSocket.getConnections().get(to).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
-					}
-					else {
-						TcpServerSocket.connect(to, 3000).sendFile(new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(to), file.getName(), date, TypeNextMessage.FILE), file.getAbsolutePath());
-					} */
-					
+					Controller.send_file(to, file.getName(), file.getAbsolutePath());
 					if (!InetAddress.getByName(Controller.get_ip_address()).equals(InetAddress.getByName(to))) {
 						Window.messages.setContent(Window.getAdressee());
 					}

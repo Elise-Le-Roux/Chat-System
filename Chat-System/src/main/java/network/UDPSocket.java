@@ -8,7 +8,7 @@ import controller.Controller;
 import network.UDPMessage.typeMessage;
 
 public class UDPSocket extends Thread{
-	
+
 	static DatagramSocket dgramSocket;
 	static private int port;
 	byte[] bufferIN = new byte[1500]; // buffer for incoming data
@@ -18,6 +18,7 @@ public class UDPSocket extends Thread{
 	// to stop the thread
 	static volatile boolean exit = false;
 
+	// CONSTRUCTOR
 	public UDPSocket (int prt) {
 		try {
 			port = prt;
@@ -40,12 +41,12 @@ public class UDPSocket extends Thread{
 				String hostAddress = inPacket.getAddress().getHostAddress();
 				InetAddress addr = inPacket.getAddress();
 				ByteArrayInputStream bais = new ByteArrayInputStream(bufferIN);
-			    ObjectInputStream ois = new ObjectInputStream(bais);
-			    
-			    UDPMessage msg = (UDPMessage)ois.readObject();
-			    
+				ObjectInputStream ois = new ObjectInputStream(bais);
+
+				UDPMessage msg = (UDPMessage)ois.readObject();
+
 				String pseudo = msg.getPseudo();
-				
+
 				if (msg.getType() == typeMessage.CONNECTED) {
 					Controller.add_connected_user(pseudo,hostAddress);
 				}
@@ -66,7 +67,7 @@ public class UDPSocket extends Thread{
 				else {
 					System.out.println("Message not recognized");
 				}
-				
+
 			} catch (IOException e) {
 				System.out.println("Input exception: " + e.getMessage());
 			} catch (ClassNotFoundException e) {
@@ -76,15 +77,15 @@ public class UDPSocket extends Thread{
 		dgramSocket.close();
 	}
 
-	
+
 	private static void send_msg(UDPMessage message, InetAddress addr) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			
+
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(message);
 			oos.flush();
-			
+
 			//get the byte array of the object
 			bufferOUT = baos.toByteArray();
 
@@ -96,11 +97,11 @@ public class UDPSocket extends Thread{
 			System.out.println("send exception: " + e.getMessage());
 		}
 	}
-	
+
 	private void send_broadcast(UDPMessage message) {
 		send_msg(message, UDPSocket.getBroadcastAddress());
 	}
-	
+
 	private void send_unicast(UDPMessage message, InetAddress addr) {
 		send_msg(message, addr);
 	}
@@ -128,23 +129,23 @@ public class UDPSocket extends Thread{
 		UDPMessage message = new UDPMessage(typeMessage.PSEUDOCHANGED, pseudo); 
 		send_broadcast(message);
 	}
-	
+
 	public void send_chosen_pseudo(String pseudo) {
 		UDPMessage message = new UDPMessage(typeMessage.PSEUDOCHOSEN, pseudo); 
 		send_broadcast(message);
 	}
-	
 
-	public static InetAddress getBroadcastAddress() { // exception a la place de retourner null !
+
+	public static InetAddress getBroadcastAddress() {
 		InetAddress broadcastAddress = null;
 		try {
-			
+
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 
 			while(interfaces.hasMoreElements()) {
-				
+
 				NetworkInterface ni = interfaces.nextElement();
-				
+
 				if ( !ni.isLoopback() || ni.isUp()) {
 					for (InterfaceAddress ia : ni.getInterfaceAddresses()) {
 						if (ia.getBroadcast() != null) {
@@ -160,27 +161,27 @@ public class UDPSocket extends Thread{
 		}
 		return broadcastAddress;
 	}
-	
+
 	public static InetAddress getLocalAddr() { 
 		InetAddress localAddress = null;
 		try {
-			
+
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 
 			while(interfaces.hasMoreElements()) {
-				
+
 				NetworkInterface ni = interfaces.nextElement();
-                 
-                 Enumeration<InetAddress> a = ni.getInetAddresses();
-                 for (; a.hasMoreElements();)
-                 {
-                	 InetAddress ia= (InetAddress) a.nextElement();
-                     if (!ia.isLinkLocalAddress() 
-                      && !ia.isLoopbackAddress()
-                      && ia instanceof Inet4Address) {
-                         return ia;
-                     }
-                 }
+
+				Enumeration<InetAddress> a = ni.getInetAddresses();
+				for (; a.hasMoreElements();)
+				{
+					InetAddress ia= (InetAddress) a.nextElement();
+					if (!ia.isLinkLocalAddress() 
+							&& !ia.isLoopbackAddress()
+							&& ia instanceof Inet4Address) {
+						return ia;
+					}
+				}
 			}
 
 		} catch (SocketException e) {

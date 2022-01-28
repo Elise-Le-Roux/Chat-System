@@ -14,57 +14,15 @@ public class Window extends JPanel {
 
 	private static final long serialVersionUID = 2087030015107756824L;
 	
-	//Specify the look and feel to use.  Valid values:
-	//null (use the default), "Metal", "System", "Motif", "GTK+"
-	final static String LOOKANDFEEL = "System";
 	public static MessagePanel messages;
 	static JFrame frame;
 	static JPanel welcome;
 	static String adressee;
-	static ListConnectedUsers list;
+	static ListUsers list;
 	public static ChatBoxPanel chatBox;
 
 	private static void initLookAndFeel() {
 		FlatDarkPurpleIJTheme.setup();
-		// Swing allows you to specify which look and feel your program uses--Java,
-		// GTK+, Windows, and so on as shown below.
-		/*String lookAndFeel = null;
-
-		if (LOOKANDFEEL != null) {
-			if (LOOKANDFEEL.equals("Metal")) {
-				lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
-			} else if (LOOKANDFEEL.equals("System")) {
-				lookAndFeel = UIManager.getSystemLookAndFeelClassName();
-			} else if (LOOKANDFEEL.equals("Motif")) {
-				lookAndFeel = "com.sun.java.swing.plaf.motif.MotifLookAndFeel";
-			} else if (LOOKANDFEEL.equals("GTK+")) { //new in 1.4.2
-				lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-			} else {
-				System.err.println("Unexpected value of LOOKANDFEEL specified: "
-						+ LOOKANDFEEL);
-				lookAndFeel = UIManager.getCrossPlatformLookAndFeelClassName();
-			}
-
-			try {
-				UIManager.setLookAndFeel(lookAndFeel);
-			} catch (ClassNotFoundException e) {
-				System.err.println("Couldn't find class for specified look and feel:"
-						+ lookAndFeel);
-				System.err.println("Did you include the L&F library in the class path?");
-				System.err.println("Using the default look and feel.");
-			} catch (UnsupportedLookAndFeelException e) {
-				System.err.println("Can't use the specified look and feel ("
-						+ lookAndFeel
-						+ ") on this platform.");
-				System.err.println("Using the default look and feel.");
-			} catch (Exception e) {
-				System.err.println("Couldn't get specified look and feel ("
-						+ lookAndFeel
-						+ "), for some reason.");
-				System.err.println("Using the default look and feel.");
-				e.printStackTrace();
-			}
-		}*/
 	}
 
 	static public void setAdressee(String adressee_1) {
@@ -98,16 +56,12 @@ public class Window extends JPanel {
 		});
 		
 		//Create the list
-		list = new ListConnectedUsers();
+		list = new ListUsers();
 		list.setOpaque(true); //content panes must be opaque
 		frame.add(list, BorderLayout.WEST);
 		
-		//Controller.get_connected_users();
 
 		//Create and set up the content pane.
-		/* JComponent newContentPane = new WelcomePanel();
-        newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane); */
 		welcome = new WelcomePanel();
 		frame.add(welcome, BorderLayout.CENTER);
 
@@ -126,7 +80,6 @@ public class Window extends JPanel {
 
 	// When a valid pseudo is entered the window's view change
 	public static void change_view() {
-		//list.list.setEnabled(true);
 		frame.remove(welcome);
 		messages = new MessagePanel();
 		chatBox = new ChatBoxPanel();
@@ -142,17 +95,6 @@ public class Window extends JPanel {
 	}
 	
 	public static void refresh_list() {
-		list.refresh(); // ajouter if si la liste n'a pas encore été créée 
+		list.refresh();
 	}
-	
-	
-	/*public static void main(String[] args) {
-		//Schedule a job for the event-dispatching thread:
-		//creating and showing this application's GUI.
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				createAndShowGUI();
-			}
-		});
-	} */
 }

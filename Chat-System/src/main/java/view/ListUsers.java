@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 
 import controller.Controller;
 
-public class ListConnectedUsers extends JPanel implements ListSelectionListener {
+public class ListUsers extends JPanel implements ListSelectionListener {
 
 	private static final long serialVersionUID = 1795695440936637831L;
 	
@@ -22,14 +22,9 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
 	JList<String> list;
 	private DefaultListModel<String> listModel;
 
-	public ListConnectedUsers(){
+	public ListUsers(){
 		super(new BorderLayout());
 		listModel = new DefaultListModel<String>();
-		
-		
-		/*for( User u : ConnectedUsers.getConnectedUsers()) {
-			listModel.addElement(u.getPseudo());
-		} */
 		
 		//Create the list and put it in a scroll pane.
         list = new JList<String>(listModel);
@@ -85,7 +80,7 @@ public class ListConnectedUsers extends JPanel implements ListSelectionListener 
             	JLabel label = ( JLabel )c;
             	Image img = null;
             	String pseudo = (String) value;
-            	if (Controller.getUnread(pseudo) ) { // & Window.getAdressee() != null && !Window.getAdressee().equals(pseudo)
+            	if (Controller.getUnread(pseudo) ) { 
             		try {
     					img = ImageIO.read(getClass().getResource("/view/blue-square.png"));
     				} catch (IOException e) {

@@ -12,8 +12,8 @@ public class TcpSocket extends Thread {
 	
 	Socket socketOfServer;
 	
-	 // to stop the thread
-	 static volatile boolean exit = false;
+    // to stop the thread
+	static volatile boolean exit = false;
     
     ObjectInputStream is;
     ObjectOutputStream os;
@@ -21,6 +21,7 @@ public class TcpSocket extends Thread {
     DataInputStream dataInputStream;
     TypeNextMessage msgType;
 
+    // CONSTRUCTOR
     public TcpSocket(Socket socketOfServer) {
     	this.socketOfServer = socketOfServer;
     	exit = false;
@@ -30,7 +31,6 @@ public class TcpSocket extends Thread {
     		this.dataInputStream = new DataInputStream(socketOfServer.getInputStream());
             this.dataOutputStream = new DataOutputStream(socketOfServer.getOutputStream());
     	} catch (IOException e) {
-    		// TODO Auto-generated catch block
     		e.printStackTrace();
 		}
 		start();
@@ -48,7 +48,6 @@ public class TcpSocket extends Thread {
 			TCPMessage msg;
 			msgType = TypeNextMessage.TEXT;
 			String fileName = null;
-			//msg = (TCPMessage) is.readObject();
 
 			while (!exit) {
 				if (msgType.equals(TypeNextMessage.TEXT)) {
@@ -62,12 +61,11 @@ public class TcpSocket extends Thread {
 						DB.insert(msg.getSender().getHostAddress(), msg.getReceiver().getHostAddress(), path, msg.getTime(), "FILE");
 						fileName = msg.getContent();
 					}
-					//Window.messages.setContent(Window.getAdressee()); // a changer
 					Controller.set_msg_unread(msg.getSender().getHostAddress());
 				}
 				else if (msgType.equals(TypeNextMessage.FILE)){
 					int bytes = 0;
-			        FileOutputStream fileOutputStream = new FileOutputStream(fileName); // A changer
+			        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
 			        long size = dataInputStream.readLong();     // read file size
 			        byte[] buffer = new byte[4*1024];
 			        while (size > 0 && (bytes = dataInputStream.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
@@ -78,24 +76,7 @@ public class TcpSocket extends Thread {
 					msgType = TypeNextMessage.TEXT;
 				}
 			}
-
 			socketOfServer.close();
-			  //is.close();
-			
-			/* TCPMessage msg;
-			BufferedReader in;
-			in = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
-
-			msg = in.readLine();
-			
-			while (msg != null){
-			System.out.println("Message received : " + msg + "\n"); // Read the messages
-			msg = in.readLine();
-			}
-			
-			socketOfServer.close();
-			in.close(); */
-
 		} catch (IOException e) { // raised when is.readObject is null
 			try {
 				socketOfServer.close(); 
@@ -119,17 +100,9 @@ public class TcpSocket extends Thread {
 		} catch (IOException e) {
 			System.out.println("Output exception: " + e.getMessage());
 		}
-		/* try {
-			PrintWriter out = new PrintWriter(socketOfServer.getOutputStream());
-			out.println(msg);
-			out.flush();
-		} catch (IOException e) {
-			System.out.println("Output exception: " + e.getMessage());
-		} */
 	}
 	
 	public void sendFile(TCPMessage msg, String path) throws Exception{
-		//send_msg(msg); // with TypeNextMessage.FILE
 		try {
 			
 			os.writeObject(msg);
@@ -142,8 +115,6 @@ public class TcpSocket extends Thread {
 		} catch (IOException e) {
 			System.out.println("Output exception: " + e.getMessage());
 		}
-		
-		
 		
         int bytes = 0;
         File file = new File(path);

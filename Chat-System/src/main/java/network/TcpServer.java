@@ -9,7 +9,7 @@ import java.util.Hashtable;
 import controller.Controller;
 import network.TCPMessage.TypeNextMessage;
 
-public class TcpServerSocket extends Thread{
+public class TcpServer extends Thread{
 	
 	static ServerSocket listener;
 	static Hashtable<String, TcpSocket> connections = new Hashtable<String, TcpSocket>(50); // host address <-> socket
@@ -18,7 +18,8 @@ public class TcpServerSocket extends Thread{
 	// to stop the thread
 	static volatile boolean exit = false;
 	
-	public TcpServerSocket(int socket_port) {
+	// CONSTRUCTOR
+	public TcpServer(int socket_port) {
 		try {
 			listener = new ServerSocket(socket_port);
 			port = socket_port;
@@ -27,7 +28,7 @@ public class TcpServerSocket extends Thread{
 			System.out.println("Server exception 1: " + e.getMessage());
 		}
 	}
-
+	
 	public void run() {
 		while (!exit) {
 			// Accept client connection requests
@@ -44,6 +45,11 @@ public class TcpServerSocket extends Thread{
 		close();
 	}
 
+	// GETTER
+	public static Hashtable<String, TcpSocket> getConnections() {
+		return connections;
+	}
+	
 	// for stopping the thread
 	public void kill() {
 		exit = true;
@@ -71,10 +77,10 @@ public class TcpServerSocket extends Thread{
 		try {
 			msg = new TCPMessage(InetAddress.getByName(Controller.get_ip_address()), InetAddress.getByName(hostAddress), content, date, TypeNextMessage.TEXT);
 			if (getConnections().containsKey(hostAddress)) {
-				TcpServerSocket.getConnections().get(hostAddress).send_msg(msg);
+				TcpServer.getConnections().get(hostAddress).send_msg(msg);
 			}
 			else {
-				TcpServerSocket.connect(hostAddress, port).send_msg(msg);
+				TcpServer.connect(hostAddress, port).send_msg(msg);
 
 			}
 		} catch (UnknownHostException e) {
@@ -102,10 +108,7 @@ public class TcpServerSocket extends Thread{
 		
 	}
 	
-	public static Hashtable<String, TcpSocket> getConnections() {
-		return connections;
-	}
-	
+	// Closes the sockets
 	public static void close() {
 		Enumeration<TcpSocket> e = connections.elements();
 		TcpSocket sock = null;
@@ -116,7 +119,6 @@ public class TcpServerSocket extends Thread{
 		try {
 			listener.close();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

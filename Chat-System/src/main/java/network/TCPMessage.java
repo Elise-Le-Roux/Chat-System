@@ -15,7 +15,7 @@ public class TCPMessage implements Serializable{
 	InetAddress from; 
 	InetAddress to;
 	String content;
-	Date time;// a enlever
+	Date time;
 	public static enum TypeNextMessage {FILE, TEXT};
 	TypeNextMessage typeNextMessage;
 	

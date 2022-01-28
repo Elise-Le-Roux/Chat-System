@@ -10,9 +10,11 @@ import network.TCPMessage;
 import network.TCPMessage.TypeNextMessage;
 
 public class DBManager {
+
 	static String url = "jdbc:sqlite:test.db";
 	static Connection conn = null;
 
+	// Connexion à la base de donnée
 	public void connect() {
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -24,6 +26,7 @@ public class DBManager {
 		}
 	}
 
+	// Insertion d'un message dans la table historique
 	public void insert(String from, String to, String content, Date time, String type) {
 		try {
 			String query = "INSERT INTO historique values (?,?,?,?,?)";
@@ -38,7 +41,8 @@ public class DBManager {
 			System.out.println("SQL INSERT exception" + e.getMessage());
 		}
 	}
-	
+
+	// Insertion d'un utilisateur dans la table users
 	public void add_new_user(String pseudo, String address) {
 		try {
 			String query = "REPLACE INTO users values (?,?,?)";
@@ -51,8 +55,9 @@ public class DBManager {
 			System.out.println("SQL INSERT exception 2" + e.getMessage());
 		}
 	}
-	
-	public void change_pseudo(String pseudo, String address) { // A enlever
+
+	// Changement du pseudo d'un utilisateur dans la table users
+	public void change_pseudo(String pseudo, String address) {
 		try {
 			String query = "UPDATE users"
 					+ "	SET pseudo = ?"
@@ -65,8 +70,9 @@ public class DBManager {
 			System.out.println("SQL INSERT exception 3" + e.getMessage());
 		}
 	}
-	
-	public void change_unread(String address, Boolean unread) { // A enlever
+
+	// Changement du booléen indiquant si un message est non lu dans la table users
+	public void change_unread(String address, Boolean unread) { 
 		try {
 			String query = "UPDATE users"
 					+ "	SET unread = ?"
@@ -79,13 +85,14 @@ public class DBManager {
 			System.out.println("SQL INSERT exception 3" + e.getMessage());
 		}
 	}
-	
+
+	// Sélection de tous les utilisateurs enregistrés
 	public ArrayList<User> select_users() {
 		try {
 			ArrayList<User> users = new ArrayList<User>();
 			String query = "SELECT * FROM users";
 			Statement stmt;
-	        stmt = conn.createStatement();
+			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while(rs.next()) {
 				users.add(new User(rs.getString(1), rs.getString(2), false, rs.getBoolean(3)));
@@ -95,16 +102,17 @@ public class DBManager {
 			System.out.println("SQL exception select 2" + e.getMessage());
 			return null;
 		}
-		
+
 	}
 
+	// Sélection d'une conversation
 	public ArrayList<TCPMessage> select_conv(String from, String to) {
 		try {
 			ArrayList<TCPMessage> messages = new ArrayList<TCPMessage>();
 			String query = "SELECT * FROM historique WHERE (de=\"" + from + "\" AND a=\"" + to + "\")"
 					+ " OR (de=\"" + to + "\"" + " AND a=\"" + from + "\")";
 			Statement stmt;
-	        stmt = conn.createStatement();
+			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while(rs.next()) {
 				InetAddress addFrom = InetAddress.getByName(rs.getString(1));
@@ -130,6 +138,7 @@ public class DBManager {
 		}
 	}
 
+	// Affichage de la base de donnée
 	static public void afficher_BDD () {
 		try {
 			String query = "SELECT * FROM historique";
@@ -150,8 +159,8 @@ public class DBManager {
 		}
 
 	}
-	
-	//initialization of the database 
+
+	//initialisation de la base de donnée
 	public void init(){
 		String query1 = "CREATE TABLE historique ("
 				+ "de VARCHAR(100), " // adresse ip
@@ -166,7 +175,7 @@ public class DBManager {
 		} catch (SQLException e) {
 			// Do nothing if database already exists
 		} finally {
-			
+
 			String query2 = "CREATE TABLE users ("
 					+ "pseudo VARCHAR(100) NOT NULL UNIQUE,"
 					+ "address VARCHAR(100) NOT NULL PRIMARY KEY," // adresse ip

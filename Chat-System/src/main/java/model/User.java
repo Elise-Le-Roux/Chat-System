@@ -1,17 +1,15 @@
 package model;
 
-import java.util.concurrent.Semaphore;
-
 public class User {
 	
 	String pseudo;
-	String hostAddress;
+	String ip_address;
 	boolean connected;
 	boolean unread_msg;
 	
 	public User (String pseudo, String address, boolean connected, boolean unread_msg) {
 		this.pseudo = pseudo;
-		this.hostAddress = address;
+		this.ip_address = address;
 		this.connected = connected;
 		this.unread_msg = unread_msg;
 	}
@@ -23,7 +21,7 @@ public class User {
 	}
 	
 	public String getHostAddress () {
-		return this.hostAddress;
+		return this.ip_address;
 	}
 	
 	public boolean getStatus () {
@@ -35,6 +33,7 @@ public class User {
 	}
 	
 	// SETTERS
+	
 	public void setPseudo (String pseudo) {
 		this.pseudo = pseudo;
 	}

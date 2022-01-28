@@ -11,8 +11,8 @@ import model.DBManager;
 public class TcpTest {
 
 	public static void main(String[] args) throws InterruptedException {
-		TcpServerSocket UserA = new TcpServerSocket(5310); // User A
-		TcpServerSocket UserB = new TcpServerSocket(6000); // User B
+		TcpServer UserA = new TcpServer(5310); // User A
+		TcpServer UserB = new TcpServer(6000); // User B
 		String hostnameAB;
 		try {
 			DBManager DB = new DBManager();
@@ -23,8 +23,8 @@ public class TcpTest {
 			InetAddress addressAB = InetAddress.getLocalHost();
 			UserA.connect(hostnameAB, 6000); // Demand of connection from User A to User B
 			Thread.sleep(1000);
-			TcpSocket socketA = TcpServerSocket.getConnections().get(hostnameAB); 
-			TcpSocket socketB = TcpServerSocket.getConnections().get("localhost");
+			TcpSocket socketA = TcpServer.getConnections().get(hostnameAB); 
+			TcpSocket socketB = TcpServer.getConnections().get("localhost");
 			System.out.println("Connections A = " + UserA.getConnections());
 			System.out.println("Connections B = " + UserB.getConnections());
 			System.out.println("Hostname = " + hostnameAB);
